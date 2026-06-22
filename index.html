@@ -1,197 +1,281 @@
 <!DOCTYPE html>
+<!--
+  PROPOSED gentropic.org landing — drop-in replacement for gentropic.github.io/index.html
+  Librarian draft 2026-06-22 (rev 4 — rebuilt on @gcu/switchboard).
+  Constellation showcase, austere. Cool neutral stage; orange accent only as event/interaction;
+  green = live status. Barlow (humans) + Space Mono (labels). Light = equipment gray (:root),
+  dark = basalt ([data-theme=dark]); follows OS, toggle top-right.
+
+  Ship alongside (all in the repo now): gcu-logo-icon.svg + gcu-favicon-32.svg + bearing.min.js
+  + fonts/ (barlow-400/600/700, space-mono-400/700/400i, OFL.txt).
+  The :root/[data-theme=dark] token block below is @gcu/switchboard's switchboard.css verbatim
+  (../auditable/ext/switchboard) — the canonical drop-in. Component CSS reads only --au-*.
+
+  All links confirmed: weir, hopper, cradle, ep, auditable/Works (gentropic.org/...),
+  BMA (endarthur.github.io/bma), playback + numen (github.com/gentropic/...).
+  NOTE: gcu-theme.html in this repo is the old (pre-switchboard) palette — safe to delete.
+-->
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Geoscientifical Chaos Union</title>
-    <link rel="icon" type="image/svg+xml" href="gcu-favicon-32.svg">
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Geoscientific Chaos Union</title>
+  <meta name="description" content="Single-file, offline-first tools you own — by computer and hammer. The Geoscientific Chaos Union.">
+  <link rel="icon" type="image/svg+xml" href="gcu-favicon-32.svg">
+  <script>
+    /* First-paint theme: stored → OS → dark fallback. Light is :root default. */
+    (function () {
+      try {
+        var t = localStorage.getItem('gcu-theme');
+        if (t !== 'light' && t !== 'dark')
+          t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'dark'); }
+    })();
+  </script>
+  <style>
+    /* ── Fonts (vendored from @gcu/switchboard) ── */
+    @font-face { font-family:'Barlow'; font-weight:400; font-display:swap; src:url('fonts/barlow-400.woff2') format('woff2'); }
+    @font-face { font-family:'Barlow'; font-weight:600; font-display:swap; src:url('fonts/barlow-600.woff2') format('woff2'); }
+    @font-face { font-family:'Barlow'; font-weight:700; font-display:swap; src:url('fonts/barlow-700.woff2') format('woff2'); }
+    @font-face { font-family:'Space Mono'; font-weight:400; font-style:normal; font-display:swap; src:url('fonts/space-mono-400.woff2') format('woff2'); }
+    @font-face { font-family:'Space Mono'; font-weight:400; font-style:italic; font-display:swap; src:url('fonts/space-mono-400i.woff2') format('woff2'); }
+    @font-face { font-family:'Space Mono'; font-weight:700; font-style:normal; font-display:swap; src:url('fonts/space-mono-700.woff2') format('woff2'); }
 
-        body {
-            background: #1a1a1a;
-            color: #ccc;
-            font-family: system-ui, -apple-system, sans-serif;
-            min-height: 100vh;
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            justify-content: center;
-            overflow: hidden;
-        }
+    /* ── @gcu/switchboard tokens (switchboard.css verbatim) ── */
+    :root {
+      --sw-bg-deep:#C2C1BE; --sw-bg:#D2D1CE; --sw-bg-raised:#E4E3E1; --sw-bg-bright:#EDECEB;
+      --sw-text:#232322; --sw-text-mid:#504F4C; --sw-text-soft:#5A5856;
+      --sw-border:#B3B1AD; --sw-border-soft:#C6C4C1; --sw-rule:#A5A3A0;
+      --sw-orange:#8B3F00; --sw-orange-soft:#FDE0CF; --sw-blue:#005C97; --sw-blue-soft:#CCE9FE;
+      --sw-green:#00602B; --sw-green-soft:#D2ECD7; --sw-yellow:#6F5700; --sw-yellow-soft:#F1E4CB;
+      --sw-red:#99191E; --sw-red-soft:#FFDDD8; --sw-violet:#793A8D; --sw-violet-soft:#F2DFF7;
+      --sw-mono:'Space Mono','JetBrains Mono','Consolas',monospace;
+      --sw-sans:'Barlow',system-ui,sans-serif;
+      --sw-radius:3px; --sw-radius-lg:4px;
+      --au-surface-deep:var(--sw-bg-deep); --au-surface:var(--sw-bg);
+      --au-surface-raised:var(--sw-bg-raised); --au-surface-bright:var(--sw-bg-bright);
+      --au-fg:var(--sw-text); --au-fg-muted:var(--sw-text-mid); --au-fg-soft:var(--sw-text-soft);
+      --au-border:var(--sw-border); --au-border-soft:var(--sw-border-soft); --au-rule:var(--sw-rule);
+      --au-action:var(--sw-orange); --au-action-soft:var(--sw-orange-soft);
+      --au-success:var(--sw-green); --au-success-soft:var(--sw-green-soft);
+      --au-font-mono:var(--sw-mono); --au-font-sans:var(--sw-sans);
+      --au-radius:var(--sw-radius); --au-radius-lg:var(--sw-radius-lg);
+      --sw-dur:0.2s; --sw-ease:cubic-bezier(0.2,0,0,1);
+      --au-dur:var(--sw-dur); --au-ease:var(--sw-ease);
+    }
+    [data-theme="dark"] {
+      --sw-bg-deep:#0E1012; --sw-bg:#15171A; --sw-bg-raised:#1D2024; --sw-bg-bright:#25282D;
+      --sw-text:#DDDCDA; --sw-text-mid:#9E9C98; --sw-text-soft:#83817E;
+      --sw-border:#2F3338; --sw-border-soft:#24272B; --sw-rule:#3A3E44;
+      --sw-orange:#FB9044; --sw-orange-soft:#2E2119; --sw-blue:#008CD1; --sw-blue-soft:#16262F;
+      --sw-green:#5CCB80; --sw-green-soft:#1A261D; --sw-yellow:#FFD73A; --sw-yellow-soft:#292317;
+      --sw-red:#E75A51; --sw-red-soft:#30201D; --sw-violet:#EC9FFF; --sw-violet-soft:#2A212C;
+    }
 
-        /* ── Background stereonet ── */
-        .stereonet-bg {
-            position: fixed;
-            top: 50%;
-            left: 50%;
-            width: 200vmax;
-            height: 200vmax;
-            transform: translate(-50%, -50%);
-            opacity: 0;
-            pointer-events: none;
-            z-index: 0;
-            transition: opacity 1s ease-in;
-        }
+    /* ── Page (reads only --au-*) ── */
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body {
+      background:var(--au-surface); color:var(--au-fg);
+      font-family:var(--au-font-sans); font-size:15px; line-height:1.55;
+      min-height:100vh; -webkit-font-smoothing:antialiased;
+    }
 
-        .stereonet-bg.loaded {
-            opacity: 0.07;
-        }
+    /* Background stereonet — neutral structural line, the cool stage stays cool */
+    .stereonet-bg {
+      position:fixed; top:50%; left:50%; width:200vmax; height:200vmax;
+      transform:translate(-50%,-50%); opacity:0; pointer-events:none; z-index:0;
+      transition:opacity 1.2s ease-in;
+    }
+    .stereonet-bg.loaded { opacity:0.05; }
+    .stereonet-bg svg { width:100%; height:100%; }
+    .stereonet-bg svg > circle:first-child { fill:transparent !important; }
+    .stereonet-bg svg path { stroke:var(--au-rule) !important; }
+    .stereonet-bg svg > circle:last-of-type { stroke:var(--au-rule) !important; fill:none !important; }
+    .stereonet-bg svg text { display:none !important; }
 
-        .stereonet-bg svg {
-            width: 100%;
-            height: 100%;
-        }
+    /* Theme toggle — equipment switch, top-right */
+    .theme-toggle {
+      position:fixed; top:1rem; right:1rem; z-index:2; cursor:pointer;
+      background:transparent; border:1px solid var(--au-border); border-radius:var(--au-radius);
+      color:var(--au-fg-soft); font-family:var(--au-font-mono); font-size:0.7rem;
+      letter-spacing:0.1em; text-transform:uppercase; padding:0.35rem 0.6rem;
+      transition:color var(--au-dur) var(--au-ease), border-color var(--au-dur) var(--au-ease);
+    }
+    .theme-toggle:hover { color:var(--au-action); border-color:var(--au-action); }
 
-        /* Override bearing.js default colors */
-        .stereonet-bg svg > circle:first-child { fill: transparent !important; }
-        .stereonet-bg svg path { stroke: #b87333 !important; }
-        .stereonet-bg svg > circle:last-of-type { stroke: #b87333 !important; fill: none !important; }
-        .stereonet-bg svg text { display: none !important; }
+    main { position:relative; z-index:1; max-width:880px; margin:0 auto; padding:5rem 1.5rem 2rem; }
 
-        /* ── Main content ── */
-        .content {
-            position: relative;
-            z-index: 1;
-            text-align: center;
-            padding: 2rem;
-        }
+    header { text-align:center; margin-bottom:3.5rem; }
+    .logo { width:104px; height:104px; margin-bottom:1.4rem; }
+    h1 {
+      font-family:var(--au-font-sans); font-weight:700; font-size:2.4rem;
+      letter-spacing:-0.015em; line-height:1.1; color:var(--au-fg);
+    }
+    .tagline { color:var(--au-fg-muted); margin-top:0.7rem; font-size:1.05rem; }
 
-        .logo {
-            width: 160px;
-            height: 160px;
-            margin-bottom: 2rem;
-        }
+    /* Constellation grid */
+    .constellation { display:grid; grid-template-columns:repeat(auto-fill,minmax(250px,1fr)); gap:0.9rem; }
+    .card {
+      display:flex; flex-direction:column; text-decoration:none; color:inherit;
+      background:var(--au-surface-raised); border:1px solid var(--au-border);
+      border-radius:var(--au-radius-lg); padding:1.05rem 1.15rem;
+      transition:border-color var(--au-dur) var(--au-ease), background var(--au-dur) var(--au-ease), transform var(--au-dur) var(--au-ease);
+    }
+    .card:hover { border-color:var(--au-action); background:var(--au-surface-bright); transform:translateY(-2px); }
+    .card .name { font-weight:600; font-size:1.08rem; color:var(--au-fg); }
+    .card .what { color:var(--au-fg-muted); font-size:0.9rem; margin-top:0.3rem; }
+    .card .tag {
+      align-self:flex-start; margin-top:auto; padding-top:0.95rem; font-family:var(--au-font-mono);
+      font-size:0.64rem; font-weight:700; letter-spacing:0.16em; text-transform:uppercase;
+      color:var(--au-fg-soft);
+    }
+    .card .tag.live::before {
+      content:''; display:inline-block; width:6px; height:6px; border-radius:50%;
+      background:var(--au-success); box-shadow:0 0 0 2px var(--au-success-soft);
+      margin-right:0.5em; vertical-align:middle;
+    }
 
-        h1 {
-            font-family: 'Latin Modern Roman', 'CMU Serif', 'STIX Two Text', Georgia, serif;
-            font-size: 2.5rem;
-            font-weight: normal;
-            color: #b87333;
-            margin-bottom: 0.5rem;
-            letter-spacing: 0.02em;
-        }
+    .stack-note {
+      text-align:center; margin:2.4rem 0 1.8rem; font-family:var(--au-font-mono);
+      font-size:0.72rem; letter-spacing:0.04em; color:var(--au-fg-soft);
+    }
+    .stack-note b { color:var(--au-fg-muted); font-weight:400; }
 
-        .tagline {
-            font-size: 1.1rem;
-            color: #666;
-            margin-bottom: 3rem;
-        }
+    .links { display:flex; gap:2rem; justify-content:center; flex-wrap:wrap; }
+    .links a {
+      color:var(--au-fg-muted); text-decoration:none; font-family:var(--au-font-mono);
+      font-size:0.74rem; letter-spacing:0.12em; text-transform:uppercase;
+      transition:color var(--au-dur) var(--au-ease);
+    }
+    .links a:hover { color:var(--au-action); }
 
-        .links {
-            display: flex;
-            gap: 2rem;
-            justify-content: center;
-            flex-wrap: wrap;
-        }
+    footer {
+      position:relative; z-index:1; text-align:center; padding:2.5rem 1.5rem 2rem;
+      font-family:var(--au-font-mono); font-size:0.74rem; color:var(--au-fg-soft);
+    }
+    footer .motto { font-style:italic; }
+    footer .gloss { color:var(--au-fg-soft); opacity:0.7; }
 
-        .links a {
-            color: #888;
-            text-decoration: none;
-            font-size: 0.9rem;
-            transition: color 0.2s;
-        }
-
-        .links a:hover {
-            color: #b87333;
-        }
-
-        /* ── Footer ── */
-        footer {
-            position: fixed;
-            bottom: 1.5rem;
-            font-size: 0.75rem;
-            color: #444;
-        }
-
-        footer a {
-            color: #555;
-            text-decoration: none;
-        }
-
-        footer a:hover {
-            color: #b87333;
-        }
-
-        /* ── Responsive ── */
-        @media (max-width: 600px) {
-            h1 { font-size: 1.8rem; }
-            .logo { width: 120px; height: 120px; }
-            .tagline { font-size: 1rem; }
-        }
-    </style>
+    @media (max-width:600px) {
+      main { padding-top:3.5rem; }
+      h1 { font-size:1.85rem; }
+      .logo { width:88px; height:88px; }
+    }
+  </style>
 </head>
 <body>
-    <div class="stereonet-bg" id="bg-container"></div>
+  <div class="stereonet-bg" id="bg-container"></div>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light / dark">◐ theme</button>
 
-    <main class="content">
-        <img src="gcu-logo-icon.svg" alt="GCU" class="logo">
-        <h1>Geoscientifical Chaos Union</h1>
-        <p class="tagline">Computational geoscience tools</p>
-        <nav class="links">
-            <a href="https://github.com/gentropic">GitHub</a>
-            <a href="https://www.npmjs.com/org/gcu">npm</a>
-            <a href="mailto:endarthur@gmail.com">Contact</a>
-        </nav>
-    </main>
+  <main>
+    <header>
+      <img src="gcu-logo-icon.svg" alt="GCU" class="logo">
+      <h1>Geoscientific Chaos Union</h1>
+      <p class="tagline">Single-file, offline-first tools you own.</p>
+    </header>
 
-    <!-- Footer -->
-    <footer>
-        <a href="#" title="Computatro et Malleo">Computatro et Malleo</a>
-    </footer>
+    <section class="constellation">
 
-    <script src="https://unpkg.com/@gcu/bearing/dist/bearing.min.js"></script>
-    <script>
-        // ============================================================
-        // ASTRONOMICAL BACKGROUND STEREONET
-        // Rotates in real time with Earth — one full turn per day,
-        // tilted by the sun's current declination.
-        // Reference location: São Paulo (-23.55, -46.63)
-        // ============================================================
+      <a class="card" href="https://gentropic.org/works">
+        <div class="name">auditable / Works</div>
+        <div class="what">Reactive notebooks and a desktop of surfaces. Compute that shows its work.</div>
+        <span class="tag live">platform</span>
+      </a>
 
-        const DEG = Math.PI / 180;
-        const LAT = -23.55;
-        const LON = -46.63;
-        const AXIAL_TILT = 23.44;
+      <a class="card" href="https://endarthur.github.io/bma">
+        <div class="name">BMA</div>
+        <div class="what">Block Model Atelier — streaming block-model QA for resource geologists. Nothing leaves the browser.</div>
+        <span class="tag live">mining</span>
+      </a>
 
-        const bgNet = new bearing.Stereonet({ size: 600, projection: 'equal-area' });
-        const bgContainer = document.getElementById('bg-container');
-        bgContainer.appendChild(bgNet.element());
+      <a class="card" href="https://gentropic.org/hopper">
+        <div class="name">hopper</div>
+        <div class="what">Serverless, offline-first forms &amp; field data. A subversive, distributed Airtable.</div>
+        <span class="tag live">field data</span>
+      </a>
 
-        function getAstroParams() {
-            const now = new Date();
-            const startOfYear = new Date(now.getFullYear(), 0, 0);
-            const dayOfYear = (now - startOfYear) / (1000 * 60 * 60 * 24);
+      <a class="card" href="https://gentropic.org/cradle">
+        <div class="name">cradle</div>
+        <div class="what">Whole little apps that travel as a QR code — menus, games, cards — offline, no server.</div>
+        <span class="tag live">capsules</span>
+      </a>
 
-            // Sun declination from day of year
-            const sunDeclination = AXIAL_TILT * Math.sin((360 / 365) * (dayOfYear - 81) * DEG);
+      <a class="card" href="https://gentropic.org/ep">
+        <div class="name">ep</div>
+        <div class="what">A dimension-aware notepad calculator. Numbers that carry their units.</div>
+        <span class="tag live">calculator</span>
+      </a>
 
-            // Solar time at reference longitude
-            const utcHours = now.getUTCHours() + now.getUTCMinutes() / 60
-                           + now.getUTCSeconds() / 3600 + now.getMilliseconds() / 3600000;
-            const solarTime = utcHours + LON / 15;
-            const rotationAngle = ((solarTime / 24) * 360 + 360) % 360;
+      <a class="card" href="https://gentropic.org/weir">
+        <div class="name">weir</div>
+        <div class="what">A standing, cataloged personal library — feeds, video, code, notes, and books.</div>
+        <span class="tag live">library</span>
+      </a>
 
-            return { rotationAngle, sunDeclination };
-        }
+      <a class="card" href="https://github.com/gentropic/playback">
+        <div class="name">playback</div>
+        <div class="what">“The Book That Plays Back” — a deterministic minimax gamebook. Free (CC0); print it yourself.</div>
+        <span class="tag">book · cc0</span>
+      </a>
 
-        function updateBg() {
-            const { rotationAngle, sunDeclination } = getAstroParams();
-            // Plunge derived from sun declination — ranges ~23° to ~67° over the year
-            const plunge = 45 + sunDeclination;
-            bgNet.setCenter(rotationAngle, plunge).render();
-        }
+      <a class="card" href="https://github.com/gentropic/numen">
+        <div class="name">numen</div>
+        <div class="what">Connect a GCU browser surface to Claude Code over MCP — socket or a shared folder, no server.</div>
+        <span class="tag">mcp bridge</span>
+      </a>
 
-        // First render + fade in
-        updateBg();
-        requestAnimationFrame(function () { bgContainer.classList.add('loaded'); });
+    </section>
 
-        // Update every second (Earth rotates ~0.004°/sec)
-        setInterval(updateBg, 1000);
-    </script>
+    <p class="stack-note">
+      Built on the <b>@gcu/*</b> stack — capsule · cradle · numen · sync · vfs · sideact · yaml · rails · loom · dee.
+    </p>
+
+    <nav class="links">
+      <a href="https://github.com/gentropic">GitHub</a>
+      <a href="https://www.npmjs.com/org/gcu">npm</a>
+      <a href="mailto:endarthur@gmail.com">Contact</a>
+    </nav>
+  </main>
+
+  <footer>
+    <span class="motto">Computatro et Malleo</span> — <span class="gloss">by computer and hammer</span>
+  </footer>
+
+  <script src="bearing.min.js"></script>
+  <script>
+    // Theme toggle (light ⇄ basalt); light is :root default, dark sets data-theme.
+    document.getElementById('themeToggle').addEventListener('click', function () {
+      var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (dark) document.documentElement.removeAttribute('data-theme');
+      else document.documentElement.setAttribute('data-theme', 'dark');
+      try { localStorage.setItem('gcu-theme', dark ? 'light' : 'dark'); } catch (e) {}
+    });
+
+    // Astronomical background stereonet — one turn per day, tilted by the sun's
+    // declination. Reference: Belo Horizonte (-19.92, -43.93). (Stylized: keys off
+    // longitude + day-of-year, not latitude.)
+    const DEG = Math.PI / 180, LON = -43.93, AXIAL_TILT = 23.44;
+    const bgNet = new bearing.Stereonet({ size: 600, projection: 'equal-area' });
+    const bgContainer = document.getElementById('bg-container');
+    bgContainer.appendChild(bgNet.element());
+    function getAstroParams() {
+      const now = new Date();
+      const startOfYear = new Date(now.getFullYear(), 0, 0);
+      const dayOfYear = (now - startOfYear) / 864e5;
+      const sunDeclination = AXIAL_TILT * Math.sin((360 / 365) * (dayOfYear - 81) * DEG);
+      const utcHours = now.getUTCHours() + now.getUTCMinutes() / 60 + now.getUTCSeconds() / 3600;
+      const solarTime = utcHours + LON / 15;
+      const rotationAngle = ((solarTime / 24) * 360 + 360) % 360;
+      return { rotationAngle, sunDeclination };
+    }
+    function updateBg() {
+      const { rotationAngle, sunDeclination } = getAstroParams();
+      bgNet.setCenter(rotationAngle, 45 + sunDeclination).render();
+    }
+    updateBg();
+    requestAnimationFrame(() => bgContainer.classList.add('loaded'));
+    setInterval(updateBg, 1000);
+  </script>
 </body>
 </html>
