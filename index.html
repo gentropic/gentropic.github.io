@@ -142,6 +142,13 @@
     }
     .stack-note b { color:var(--au-fg-muted); font-weight:400; }
 
+    .wing {
+      text-align:center; margin:2.4rem 0 0; font-family:var(--au-font-mono);
+      font-size:0.8rem; letter-spacing:0.03em; color:var(--au-fg-muted);
+    }
+    .wing a { color:var(--au-action); text-decoration:none; border-bottom:1px solid transparent; transition:border-color var(--au-dur) var(--au-ease); }
+    .wing a:hover { border-color:var(--au-action); }
+
     .links { display:flex; gap:2rem; justify-content:center; flex-wrap:wrap; }
     .links a {
       color:var(--au-fg-muted); text-decoration:none; font-family:var(--au-font-mono);
@@ -233,6 +240,10 @@
 
     </section>
 
+    <p class="wing">
+      Deploying in a locked-down environment? <a href="https://gentropic.org/security">gentropic.org/security</a> &mdash; verify GCU tools, and how to bring one through approval.
+    </p>
+
     <p class="stack-note">
       Built on the <b>@gcu/*</b> stack — capsule · cradle · numen · sync · vfs · sideact · yaml · rails · loom · dee.
     </p>
@@ -240,6 +251,7 @@
     <nav class="links">
       <a href="https://github.com/gentropic">GitHub</a>
       <a href="https://www.npmjs.com/org/gcu">npm</a>
+      <a href="https://gentropic.org/security">Security</a>
       <a href="mailto:endarthur@gmail.com">Contact</a>
     </nav>
   </main>
