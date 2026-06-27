@@ -1,6 +1,16 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
-  <!-- @gcu/accountable — nested forward chevrons (folded strata advancing = consented outbound reach).
-       blue trailing layer + copper leading edge (the GCU thread). flat, transparent, sharp (miter). Δ10. -->
-  <path d="M5 7 L16 16 L5 25" fill="none" stroke="#2E86C1" stroke-width="4.2" stroke-linecap="butt" stroke-linejoin="miter"/>
-  <path d="M15 7 L26 16 L15 25" fill="none" stroke="#d97a3c" stroke-width="4.2" stroke-linecap="butt" stroke-linejoin="miter"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="-26.21 -17.74 60.65 60.65">
+  <!-- @gcu/accountable — an isometric inbox tray of records: accountable = it keeps the account
+       (the provenance receipts). copper tray + light paper stack + a blue top sheet (the GCU
+       two-colour thread). flat isometric, transparent. -->
+  <polygon points="30.44,17.57 8.23,30.40 8.23,25.18 30.44,12.35" fill="#b15f2c" stroke="#0E1012" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="0.00,-5.23 30.44,12.35 26.98,14.34 -3.46,-3.23" fill="#e3935b" stroke="#0E1012" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="0.00,-5.23 3.46,-3.23 -18.76,9.59 -22.21,7.60" fill="#e3935b" stroke="#0E1012" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="0.00,-1.24 23.53,12.35 8.23,21.19 -15.30,7.60" fill="#15171A" stroke="#0E1012" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="-13.66,11.50 7.90,23.94 7.90,18.71 -13.66,6.27" fill="#cdd5dd" stroke="#0E1012" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="21.88,15.87 7.90,23.94 7.90,18.71 21.88,10.64" fill="#b6bfc8" stroke="#0E1012" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="0.33,-1.81 21.88,10.64 7.90,18.71 -13.66,6.27" fill="#EDEBE7" stroke="#0E1012" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="-11.02,5.04 10.53,17.67 24.52,9.41 2.96,-3.04" fill="#2E86C1" stroke="#0E1012" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="-18.76,5.61 11.68,23.18 8.23,25.18 -22.21,7.60" fill="#d97a3c" stroke="#0E1012" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="26.98,10.36 30.44,12.35 8.23,25.18 4.77,23.18" fill="#b15f2c" stroke="#0E1012" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/>
+  <polygon points="-22.21,12.83 8.23,30.40 8.23,25.18 -22.21,7.60" fill="#d97a3c" stroke="#0E1012" stroke-width="1.1" stroke-linejoin="round" stroke-linecap="round"/>
 </svg>
