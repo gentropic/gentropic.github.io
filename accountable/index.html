@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<!--
+  Accountable — product page. GCU design language: @gcu/switchboard tokens (verbatim from the
+  landing), Barlow + Space Mono, light (equipment gray) / dark (basalt) following OS + toggle.
+  Assets shared with the root landing via ../  (fonts, bearing.min.js, favicon).
+-->
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accountable — consented cross-origin fetch · GCU</title>
+  <meta name="description" content="A browser extension that brokers cross-origin fetches for GCU web apps — consented, scoped, credential-less. You decide which sites may reach which hosts; nothing leaves your device.">
+  <link rel="icon" type="image/svg+xml" href="../gcu-favicon-32.svg">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('gcu-theme');
+        if (t !== 'light' && t !== 'dark')
+          t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'dark'); }
+    })();
+  </script>
+  <style>
+    @font-face { font-family:'Barlow'; font-weight:400; font-display:swap; src:url('../fonts/barlow-400.woff2') format('woff2'); }
+    @font-face { font-family:'Barlow'; font-weight:600; font-display:swap; src:url('../fonts/barlow-600.woff2') format('woff2'); }
+    @font-face { font-family:'Barlow'; font-weight:700; font-display:swap; src:url('../fonts/barlow-700.woff2') format('woff2'); }
+    @font-face { font-family:'Space Mono'; font-weight:400; font-style:normal; font-display:swap; src:url('../fonts/space-mono-400.woff2') format('woff2'); }
+    @font-face { font-family:'Space Mono'; font-weight:700; font-style:normal; font-display:swap; src:url('../fonts/space-mono-700.woff2') format('woff2'); }
+
+    /* @gcu/switchboard tokens (verbatim) */
+    :root {
+      --sw-bg-deep:#C2C1BE; --sw-bg:#D2D1CE; --sw-bg-raised:#E4E3E1; --sw-bg-bright:#EDECEB;
+      --sw-text:#232322; --sw-text-mid:#504F4C; --sw-text-soft:#5A5856;
+      --sw-border:#B3B1AD; --sw-border-soft:#C6C4C1; --sw-rule:#A5A3A0;
+      --sw-orange:#8B3F00; --sw-orange-soft:#FDE0CF; --sw-blue:#005C97; --sw-blue-soft:#CCE9FE;
+      --sw-green:#00602B; --sw-green-soft:#D2ECD7;
+      --sw-mono:'Space Mono','JetBrains Mono','Consolas',monospace; --sw-sans:'Barlow',system-ui,sans-serif;
+      --sw-radius:3px; --sw-radius-lg:4px;
+      --au-surface-deep:var(--sw-bg-deep); --au-surface:var(--sw-bg); --au-surface-raised:var(--sw-bg-raised); --au-surface-bright:var(--sw-bg-bright);
+      --au-fg:var(--sw-text); --au-fg-muted:var(--sw-text-mid); --au-fg-soft:var(--sw-text-soft);
+      --au-border:var(--sw-border); --au-border-soft:var(--sw-border-soft); --au-rule:var(--sw-rule);
+      --au-action:var(--sw-orange); --au-action-soft:var(--sw-orange-soft); --au-success:var(--sw-green); --au-success-soft:var(--sw-green-soft);
+      --au-font-mono:var(--sw-mono); --au-font-sans:var(--sw-sans); --au-radius:var(--sw-radius); --au-radius-lg:var(--sw-radius-lg);
+      --au-dur:0.2s; --au-ease:cubic-bezier(0.2,0,0,1);
+      --acc-copper:#b86a34; --acc-blue:#1f6fa8;
+    }
+    [data-theme="dark"] {
+      --sw-bg-deep:#0E1012; --sw-bg:#15171A; --sw-bg-raised:#1D2024; --sw-bg-bright:#25282D;
+      --sw-text:#DDDCDA; --sw-text-mid:#9E9C98; --sw-text-soft:#83817E;
+      --sw-border:#2F3338; --sw-border-soft:#24272B; --sw-rule:#3A3E44;
+      --sw-orange:#FB9044; --sw-orange-soft:#2E2119; --sw-blue:#008CD1; --sw-blue-soft:#16262F;
+      --sw-green:#5CCB80; --sw-green-soft:#1A261D;
+      --acc-copper:#d97a3c; --acc-blue:#2E86C1;
+    }
+
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--au-surface); color:var(--au-fg); font-family:var(--au-font-sans); font-size:15px; line-height:1.6; min-height:100vh; -webkit-font-smoothing:antialiased; }
+
+    .stereonet-bg { position:fixed; top:50%; left:50%; width:200vmax; height:200vmax; transform:translate(-50%,-50%); opacity:0; pointer-events:none; z-index:0; transition:opacity 1.2s ease-in; }
+    .stereonet-bg.loaded { opacity:0.045; }
+    .stereonet-bg svg { width:100%; height:100%; }
+    .stereonet-bg svg > circle:first-child { fill:transparent !important; }
+    .stereonet-bg svg path { stroke:var(--au-rule) !important; }
+    .stereonet-bg svg > circle:last-of-type { stroke:var(--au-rule) !important; fill:none !important; }
+    .stereonet-bg svg text { display:none !important; }
+
+    .theme-toggle { position:fixed; top:1rem; right:1rem; z-index:3; cursor:pointer; background:transparent; border:1px solid var(--au-border); border-radius:var(--au-radius); color:var(--au-fg-soft); font-family:var(--au-font-mono); font-size:0.7rem; letter-spacing:0.1em; text-transform:uppercase; padding:0.35rem 0.6rem; transition:color var(--au-dur), border-color var(--au-dur); }
+    .theme-toggle:hover { color:var(--au-action); border-color:var(--au-action); }
+    .crumb { position:fixed; top:1rem; left:1rem; z-index:3; font-family:var(--au-font-mono); font-size:0.72rem; letter-spacing:0.06em; color:var(--au-fg-soft); text-decoration:none; }
+    .crumb:hover { color:var(--au-action); }
+
+    main { position:relative; z-index:1; max-width:820px; margin:0 auto; padding:5rem 1.5rem 2rem; }
+
+    header { text-align:center; margin-bottom:3rem; }
+    .mark { width:96px; height:96px; margin:0 auto 1.4rem; display:block; }
+    h1 { font-family:var(--au-font-sans); font-weight:700; font-size:2.7rem; letter-spacing:-0.02em; line-height:1.05; }
+    .tagline { color:var(--au-fg-muted); margin:0.85rem auto 0; font-size:1.1rem; max-width:42rem; }
+    .cta { display:flex; gap:0.7rem; justify-content:center; flex-wrap:wrap; margin-top:1.7rem; }
+    .btn { font-family:var(--au-font-mono); font-size:0.74rem; letter-spacing:0.08em; text-transform:uppercase; text-decoration:none; padding:0.55rem 1rem; border-radius:var(--au-radius); border:1px solid var(--au-border); color:var(--au-fg-muted); transition:color var(--au-dur), border-color var(--au-dur), background var(--au-dur); }
+    .btn:hover { color:var(--au-action); border-color:var(--au-action); }
+    .btn.primary { background:var(--au-action); border-color:var(--au-action); color:var(--au-surface); }
+    .btn.primary:hover { background:transparent; color:var(--au-action); }
+
+    section { margin:3rem 0; }
+    .lead { color:var(--au-fg-muted); font-size:1.02rem; }
+    .lead b, .lead strong { color:var(--au-fg); font-weight:600; }
+    h2 { font-family:var(--au-font-mono); font-size:0.74rem; font-weight:700; letter-spacing:0.16em; text-transform:uppercase; color:var(--au-fg-soft); margin-bottom:1.1rem; }
+
+    .grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(220px,1fr)); gap:0.9rem; }
+    .feat { background:var(--au-surface-raised); border:1px solid var(--au-border); border-radius:var(--au-radius-lg); padding:1.1rem 1.2rem; }
+    .feat .ft { font-weight:600; color:var(--au-fg); margin-bottom:0.35rem; }
+    .feat .fb { color:var(--au-fg-muted); font-size:0.92rem; }
+
+    .shots { display:grid; grid-template-columns:1fr 1fr; gap:1rem; align-items:start; }
+    .shot { background:var(--au-surface-raised); border:1px solid var(--au-border); border-radius:var(--au-radius-lg); padding:0.6rem; }
+    .shot img { width:100%; display:block; border-radius:var(--au-radius); border:1px solid var(--au-border-soft); }
+    .shot .cap { font-family:var(--au-font-mono); font-size:0.68rem; letter-spacing:0.04em; color:var(--au-fg-soft); margin-top:0.55rem; text-align:center; }
+
+    ol.steps { list-style:none; counter-reset:s; }
+    ol.steps li { counter-increment:s; position:relative; padding:0.4rem 0 0.4rem 2.2rem; color:var(--au-fg-muted); border-top:1px solid var(--au-border-soft); }
+    ol.steps li:first-child { border-top:none; }
+    ol.steps li::before { content:counter(s); position:absolute; left:0; top:0.4rem; width:1.5rem; height:1.5rem; border:1px solid var(--au-border); border-radius:50%; text-align:center; line-height:1.45rem; font-family:var(--au-font-mono); font-size:0.78rem; color:var(--au-fg-soft); }
+    ol.steps b, ol.steps code { color:var(--au-fg); }
+    code { font-family:var(--au-font-mono); font-size:0.86em; color:var(--acc-copper); }
+
+    .privacy-box { background:var(--au-surface-raised); border:1px solid var(--au-border); border-left:3px solid var(--au-success); border-radius:var(--au-radius-lg); padding:1.1rem 1.25rem; }
+    .privacy-box .ph { font-weight:600; color:var(--au-fg); }
+    .privacy-box p { color:var(--au-fg-muted); font-size:0.95rem; margin-top:0.3rem; }
+    .privacy-box a { color:var(--au-action); text-decoration:none; border-bottom:1px solid transparent; }
+    .privacy-box a:hover { border-color:var(--au-action); }
+
+    .links { display:flex; gap:2rem; justify-content:center; flex-wrap:wrap; margin-top:1rem; }
+    .links a { color:var(--au-fg-muted); text-decoration:none; font-family:var(--au-font-mono); font-size:0.74rem; letter-spacing:0.12em; text-transform:uppercase; transition:color var(--au-dur); }
+    .links a:hover { color:var(--au-action); }
+
+    footer { position:relative; z-index:1; text-align:center; padding:2.5rem 1.5rem 2rem; font-family:var(--au-font-mono); font-size:0.74rem; color:var(--au-fg-soft); }
+    footer .motto { font-style:italic; }
+
+    @media (max-width:620px) { main { padding-top:4rem; } h1 { font-size:2rem; } .shots { grid-template-columns:1fr; } }
+  </style>
+</head>
+<body>
+  <div class="stereonet-bg" id="bg-container"></div>
+  <a class="crumb" href="/">← GCU</a>
+  <button class="theme-toggle" id="themeToggle" aria-label="Toggle light / dark">◐ theme</button>
+
+  <main>
+    <header>
+      <svg class="mark" viewBox="0 0 32 32" aria-hidden="true">
+        <path d="M5 7 L16 16 L5 25" fill="none" stroke="var(--acc-blue)" stroke-width="4.2" stroke-linejoin="miter"/>
+        <path d="M15 7 L26 16 L15 25" fill="none" stroke="var(--acc-copper)" stroke-width="4.2" stroke-linejoin="miter"/>
+      </svg>
+      <h1>Accountable</h1>
+      <p class="tagline">Consented, scoped, credential-less cross-origin fetch for your GCU web apps. <b>You</b> decide which sites may reach which hosts — and nothing ever leaves your device.</p>
+      <div class="cta">
+        <a class="btn primary" href="#install">Install</a>
+        <a class="btn" href="https://github.com/gentropic/accountable">GitHub</a>
+        <a class="btn" href="privacy.html">Privacy</a>
+      </div>
+    </header>
+
+    <section>
+      <p class="lead">GCU tools want to fetch arbitrary URLs — feeds, datasets, raw files, a local AI model — that the browser's same-origin policy blocks. The usual workarounds each leak trust: public CORS proxies <em>see your traffic</em>, extensions with blanket <code>&lt;all_urls&gt;</code> hold <em>ambient</em> power, native shells are heavy. <b>Accountable takes the middle path</b> — a fetch broker where access is granted per-site, every request is credential-less, private-network targets are blocked by default, and there is no server to send anything to.</p>
+    </section>
+
+    <section>
+      <h2>How it works</h2>
+      <div class="grid">
+        <div class="feat"><div class="ft">You grant, per site</div><div class="fb">A site you allow may broker credential-less GETs to any public host. Writes, WebSocket, and localhost need an explicit per-host yes — surfaced as pending requests you approve in context, never pre-armed.</div></div>
+        <div class="feat"><div class="ft">Two gates, both yours</div><div class="fb">The browser host permission is <em>optional</em> and granted once at runtime — never on install. On top of it sits your per-site grant store. Even with the permission, nothing fetches until a site you allowed asks it to.</div></div>
+        <div class="feat"><div class="ft">Nothing leaves your device</div><div class="fb">No servers, no accounts, no telemetry. Grants and the response cache live in your browser; the activity log is off by default. Every fetch drops your cookies and is checked against an SSRF / private-range guard.</div></div>
+      </div>
+    </section>
+
+    <section>
+      <h2>What you see</h2>
+      <div class="shots">
+        <div class="shot"><img src="popup.png" alt="The Accountable popup: a reads toggle and pending grant requests for the current site"><div class="cap">the popup — grant reads, approve pending requests</div></div>
+        <div class="shot"><img src="options.png" alt="The Accountable options page: network access, granted sites with read/write/local chips"><div class="cap">options — manage every site &amp; grant</div></div>
+      </div>
+    </section>
+
+    <section id="install">
+      <h2>Install</h2>
+      <ol class="steps">
+        <li><code>git clone https://github.com/gentropic/accountable</code> (or download the folder).</li>
+        <li>Open <code>chrome://extensions</code>, toggle <b>Developer mode</b>, click <b>Load unpacked</b>, select the folder.</li>
+        <li>Visit a GCU page, click the <b>Accountable</b> toolbar icon, and turn on <b>Allow reads</b> — that's the one host-permission prompt.</li>
+      </ol>
+      <p class="lead" style="margin-top:1rem; font-size:0.92rem;">Chrome / Edge / Brave. Store listings coming soon. Works wherever weir, auditable, and the other GCU tools run.</p>
+    </section>
+
+    <section>
+      <div class="privacy-box">
+        <div class="ph">Privacy, in one line</div>
+        <p>Accountable collects nothing. No servers, no accounts, no tracking — everything it remembers lives only in your own browser. <a href="privacy.html">Read the full privacy policy →</a></p>
+      </div>
+    </section>
+
+    <nav class="links">
+      <a href="https://github.com/gentropic/accountable">GitHub</a>
+      <a href="/">GCU</a>
+      <a href="privacy.html">Privacy</a>
+      <a href="mailto:endarthur@gmail.com">Contact</a>
+    </nav>
+  </main>
+
+  <footer><span class="motto">Computatro et Malleo</span> — by computer and hammer</footer>
+
+  <script src="../bearing.min.js"></script>
+  <script>
+    document.getElementById('themeToggle').addEventListener('click', function () {
+      var dark = document.documentElement.getAttribute('data-theme') === 'dark';
+      if (dark) document.documentElement.removeAttribute('data-theme');
+      else document.documentElement.setAttribute('data-theme', 'dark');
+      try { localStorage.setItem('gcu-theme', dark ? 'light' : 'dark'); } catch (e) {}
+    });
+    try {
+      const DEG = Math.PI/180, LON = -43.93, TILT = 23.44;
+      const net = new bearing.Stereonet({ size:600, projection:'equal-area' });
+      const c = document.getElementById('bg-container'); c.appendChild(net.element());
+      function upd() {
+        const now = new Date(), soy = new Date(now.getFullYear(),0,0), doy = (now-soy)/864e5;
+        const dec = TILT*Math.sin((360/365)*(doy-81)*DEG);
+        const uh = now.getUTCHours()+now.getUTCMinutes()/60, st = uh+LON/15, rot = ((st/24)*360+360)%360;
+        net.setCenter(rot, 45+dec).render();
+      }
+      upd(); requestAnimationFrame(() => c.classList.add('loaded')); setInterval(upd, 1000);
+    } catch (e) {}
+  </script>
+</body>
+</html>

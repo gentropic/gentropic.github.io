@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Accountable — Privacy Policy</title>
+  <meta name="description" content="Accountable collects nothing. No servers, no accounts, no tracking. Everything it remembers lives only in your own browser.">
+  <link rel="icon" type="image/svg+xml" href="../gcu-favicon-32.svg">
+  <script>
+    (function () {
+      try {
+        var t = localStorage.getItem('gcu-theme');
+        if (t !== 'light' && t !== 'dark') t = (window.matchMedia && window.matchMedia('(prefers-color-scheme: light)').matches) ? 'light' : 'dark';
+        if (t === 'dark') document.documentElement.setAttribute('data-theme', 'dark');
+      } catch (e) { document.documentElement.setAttribute('data-theme', 'dark'); }
+    })();
+  </script>
+  <style>
+    @font-face { font-family:'Barlow'; font-weight:400; font-display:swap; src:url('../fonts/barlow-400.woff2') format('woff2'); }
+    @font-face { font-family:'Barlow'; font-weight:600; font-display:swap; src:url('../fonts/barlow-600.woff2') format('woff2'); }
+    @font-face { font-family:'Barlow'; font-weight:700; font-display:swap; src:url('../fonts/barlow-700.woff2') format('woff2'); }
+    @font-face { font-family:'Space Mono'; font-weight:400; font-display:swap; src:url('../fonts/space-mono-400.woff2') format('woff2'); }
+    :root {
+      --sw-bg:#D2D1CE; --sw-bg-raised:#E4E3E1; --sw-text:#232322; --sw-text-mid:#504F4C; --sw-text-soft:#5A5856;
+      --sw-border:#B3B1AD; --sw-border-soft:#C6C4C1; --sw-orange:#8B3F00; --sw-green:#00602B;
+      --sw-mono:'Space Mono','Consolas',monospace; --sw-sans:'Barlow',system-ui,sans-serif;
+      --au-surface:var(--sw-bg); --au-surface-raised:var(--sw-bg-raised); --au-fg:var(--sw-text); --au-fg-muted:var(--sw-text-mid); --au-fg-soft:var(--sw-text-soft);
+      --au-border:var(--sw-border); --au-border-soft:var(--sw-border-soft); --au-action:var(--sw-orange); --au-success:var(--sw-green);
+      --au-font-mono:var(--sw-mono); --au-font-sans:var(--sw-sans); --au-dur:0.2s;
+    }
+    [data-theme="dark"] {
+      --sw-bg:#15171A; --sw-bg-raised:#1D2024; --sw-text:#DDDCDA; --sw-text-mid:#9E9C98; --sw-text-soft:#83817E;
+      --sw-border:#2F3338; --sw-border-soft:#24272B; --sw-orange:#FB9044; --sw-green:#5CCB80;
+    }
+    * { margin:0; padding:0; box-sizing:border-box; }
+    body { background:var(--au-surface); color:var(--au-fg); font-family:var(--au-font-sans); font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+    .crumb { display:inline-block; font-family:var(--au-font-mono); font-size:0.72rem; letter-spacing:0.06em; color:var(--au-fg-soft); text-decoration:none; margin-bottom:1.5rem; }
+    .crumb:hover { color:var(--au-action); }
+    main { max-width:680px; margin:0 auto; padding:3.5rem 1.5rem 4rem; }
+    h1 { font-weight:700; font-size:2rem; letter-spacing:-0.015em; }
+    .eff { font-family:var(--au-font-mono); font-size:0.74rem; color:var(--au-fg-soft); margin-top:0.4rem; }
+    h2 { font-weight:600; font-size:1.15rem; margin:2.2rem 0 0.6rem; }
+    p { color:var(--au-fg-muted); margin:0.7rem 0; }
+    p strong, li strong, td strong { color:var(--au-fg); font-weight:600; }
+    .summary { background:var(--au-surface-raised); border:1px solid var(--au-border); border-left:3px solid var(--au-success); border-radius:4px; padding:1.1rem 1.25rem; margin-top:1.5rem; }
+    .summary p { margin:0; }
+    ul { margin:0.6rem 0 0.6rem 1.2rem; color:var(--au-fg-muted); }
+    li { margin:0.35rem 0; }
+    table { width:100%; border-collapse:collapse; margin:1rem 0; font-size:0.92rem; }
+    th, td { text-align:left; padding:0.55rem 0.7rem; border-bottom:1px solid var(--au-border-soft); vertical-align:top; color:var(--au-fg-muted); }
+    th { font-family:var(--au-font-mono); font-size:0.68rem; letter-spacing:0.08em; text-transform:uppercase; color:var(--au-fg-soft); font-weight:700; }
+    code { font-family:var(--au-font-mono); font-size:0.86em; color:var(--au-action); }
+    a { color:var(--au-action); text-decoration:none; border-bottom:1px solid transparent; }
+    a:hover { border-color:var(--au-action); }
+  </style>
+</head>
+<body>
+  <main>
+    <a class="crumb" href="index.html">← Accountable</a>
+    <h1>Privacy Policy — Accountable</h1>
+    <p class="eff">Effective date: 27 June 2026</p>
+
+    <div class="summary"><p><strong>Accountable collects nothing.</strong> It has no servers, no accounts, and no tracking of any kind. Everything it remembers — which sites you've allowed, what it has cached, and (if you turn it on) its activity log — lives only in your own browser, on your own device, and is never sent anywhere. We can't see it, because there's nowhere for it to go.</p></div>
+
+    <h2>What Accountable is</h2>
+    <p>A browser extension that makes cross-origin network requests <em>on behalf of web apps you explicitly authorize</em> — so those apps can load feeds, files, datasets, or a local AI model that the browser would otherwise block. You decide which sites may use it, and which hosts each may reach.</p>
+
+    <h2>What it stores, and where</h2>
+    <p>All of the following is kept in your browser's local extension storage (<code>chrome.storage.local</code>). None of it is transmitted, synced, shared, or sold. It never leaves your device.</p>
+    <table>
+      <tr><th>What</th><th>Why</th><th>Where</th></tr>
+      <tr><td><strong>Your grants</strong> — which sites may make requests, and to which hosts</td><td>so it knows what you've allowed</td><td>local only</td></tr>
+      <tr><td><strong>A response cache</strong> — copies of fetched content</td><td>speed / fewer requests</td><td>local only</td></tr>
+      <tr><td><strong>An activity log</strong> — a record of brokered requests</td><td>debugging / transparency</td><td>local, <strong>off by default</strong></td></tr>
+    </table>
+    <p>You can clear any of it at any time from the extension's options page, or by removing the extension.</p>
+
+    <h2>What it does NOT do</h2>
+    <ul>
+      <li><strong>No data collection.</strong> No personal information, browsing history, analytics, telemetry, or usage statistics — none.</li>
+      <li><strong>No servers, no accounts.</strong> Accountable talks to no backend of ours. There is no sign-up and no identifier of any kind.</li>
+      <li><strong>No selling or sharing.</strong> There is nothing to sell or share, and we share nothing.</li>
+      <li><strong>No ads, no third-party trackers.</strong></li>
+    </ul>
+
+    <h2>About the requests it makes</h2>
+    <p>When you authorize a site, Accountable fetches the URLs that site asks for, on your behalf, and <strong>without attaching your cookies or credentials</strong>. Those requests go directly from your browser to the destination you're using (a feed host, an API, your local model, etc.) — they are governed by <em>that</em> destination's own privacy practices, not ours. Accountable does not inspect, retain off-device, or report on their content.</p>
+
+    <h2>Permissions, in plain terms</h2>
+    <ul>
+      <li><strong>Host access (<code>*://*/*</code>, optional, granted by you at runtime)</strong> — a fetch broker must be able to reach whatever host an app you've allowed requests; it's requested only when you turn on access, never on install, and nothing is fetched until a site you've allowed asks.</li>
+      <li><strong>Storage</strong> — to remember your grants and the cache locally.</li>
+      <li><strong>Scripting / activeTab</strong> — to inject the page↔extension relay on sites you've allowed, and to read the current tab's address in the popup so it can show and grant "this site."</li>
+    </ul>
+
+    <h2>Changes</h2>
+    <p>If this policy ever changes, the updated version will be published here with a new effective date.</p>
+
+    <h2>Contact</h2>
+    <p>Questions: open an issue at <a href="https://github.com/gentropic/accountable">github.com/gentropic/accountable</a> or email <a href="mailto:endarthur@gmail.com">endarthur@gmail.com</a>.</p>
+  </main>
+</body>
+</html>

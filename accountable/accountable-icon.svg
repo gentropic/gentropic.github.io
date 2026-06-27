@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32">
+  <!-- @gcu/accountable — nested forward chevrons (folded strata advancing = consented outbound reach).
+       blue trailing layer + copper leading edge (the GCU thread). flat, transparent, sharp (miter). Δ10. -->
+  <path d="M5 7 L16 16 L5 25" fill="none" stroke="#2E86C1" stroke-width="4.2" stroke-linecap="butt" stroke-linejoin="miter"/>
+  <path d="M15 7 L26 16 L15 25" fill="none" stroke="#d97a3c" stroke-width="4.2" stroke-linecap="butt" stroke-linejoin="miter"/>
+</svg>
