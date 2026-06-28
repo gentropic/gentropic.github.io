@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<!--
+Copyright (c) 2017 Arthur Endlein
+
+Permission is hereby granted, free of charge, to any person obtaining a copy
+of this software and associated documentation files (the "Software"), to deal
+in the Software without restriction, including without limitation the rights
+to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+copies of the Software, and to permit persons to whom the Software is
+furnished to do so, subject to the following conditions:
+
+The above copyright notice and this permission notice shall be included in all
+copies or substantial portions of the Software.
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+SOFTWARE.
+-->
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" type="text/css" href="digikom.css">
+    <link href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400" rel="stylesheet">
+    <title>digikom</title>
+</head>
+
+<body>
+    <div class="container">
+        <svg width="100" height="100" id="stereoPlot" viewBox="-110 -110 220 220">
+            <g class="stereo-element" id="stereoDiagram">
+                <clipPath id="clipPrimitive">
+                    <circle cx="0" cy="0" r="1" />
+                </clipPath>
+                <circle id="stereoCircle" cx="0" cy="0" r="1" fill="none"></circle>
+                <line class="cardinalMarker" x1="0" y1="0.95" x2="0" y2="1.05" />
+                <line class="cardinalMarker" x1="0" y1="-0.95" x2="0" y2="-1.05" />
+                <line class="cardinalMarker" x1="0.95" y1="0" x2="1.05" y2="0" />
+                <line class="cardinalMarker" x1="-0.95" y1="0" x2="-1.05" y2="0" />
+                <line class="cardinalMarker" x1="-0.05" y1="0" x2="0.05" y2="0" />
+                <line class="cardinalMarker" x1="0" y1="-0.05" x2="0" y2="0.05" />
+            </g>
+            <g class="stereo-element" id="stereoPoints">
+                <g id="dataPoints"></g>
+            </g>
+            <g class="stereo-element" id="stereoLines">
+                <polyline id="phone-gc" points="0, 0" />
+            </g>
+            <text x="-100" y="97" id="projectionText">
+                130/45
+            </text>
+            <g id="lockTriggerGroup">
+                <circle cx="0" cy="0" r="12" />
+                <g clip-path="url(#clipTrigger)">
+                    <clipPath id="clipTrigger">
+                        <circle cx="-0" cy="0" r="10" />
+                    </clipPath>
+                    <line x1="-8" y1="12" x2="-8" y2="-12" />
+                    <line x1="-4" y1="12" x2="-4" y2="-12" />
+                    <line x1="0" y1="12" x2="0" y2="-12" />
+                    <line x1="4" y1="12" x2="4" y2="-12" />
+                    <line x1="8" y1="12" x2="8" y2="-12" />
+                    <line x1="12" y1="12" x2="12" y2="-12" />
+                </g>
+            </g>
+            <g id="lockToggleGroup">
+                <path id="lockOn" d="M 5 25 L 5 20 A 10 10 0 0 1 25 20 L 25 25" display="none" />
+                <path id="lockOff" d="M 25 25 L 25 10 A 10 10 0 0 1 45 10 L 45 20" />
+                <rect x="0" y="25" width="30" height="20" />
+            </g>
+            <g id="planeToggleGroup" transform="translate(85, -85) rotate(135)">
+                <marker id="triangle" viewBox="0 0 10 10" refX="0" refY="5" markerUnits="strokeWidth" markerWidth="8" markerHeight="6" orient="auto">
+                    <path d="M 0 0 L 10 5 L 0 10 z" />
+                </marker>
+                <line id="planeMeasureOff" x1="0" y1="10" x2="0" y2="-10" marker-end="url(#triangle)" display="none" />
+                <g id="planeMeasureOn">
+                    <line x1="-10" y1="0" x2="10" y2="0" />
+                    <line x1="0" y1="0" x2="0" y2="-5" />
+                </g>
+                <circle cx="0" cy="0" r="10" opacity="0" />
+            </g>
+        </svg>
+        <svg width="100" height="20" id="stereoToolbar" viewBox="0 0 100 20">
+            <g id="saveFloppy" transform="translate(82) scale(.5)">
+                <path d="M 0 0 H 24 L 25 1 V 26 H 0 Z" />
+                <path d="M 2.2 26 V 11 H 22 V 26" />
+                <path d="M 2.2 0 V 8 A 1 1 0 0 0 3.2 9 H 18 A 1 1 0 0 0 19 8 V 0" />
+                <path d="M 6 0 V 8 A 1 1 0 0 0 7 9 H 18 A 1 1 0 0 0 19 8 V 0" />
+                <path d="M 13 1 H 17 V 8 H 13 Z" />
+                <path d="M 23 23 H 24 V 24 H 23 Z" />
+                <path d="M 0.6 23 H 1.6 V 24 H 0.6 Z" />
+            </g>
+            <g id="toggleMarker" transform=" translate(15) rotate(45) scale(.5)">
+                <path d="M 0 0 V 20 H 7 V 0" />
+                <path d="M 1.5 20 V 25 H 5.5 V 20" />
+                <path d="M 3 25 V 30 H 4 V 25" />
+                <path d="M 3 30 V 31 H 4 V 30 Z" fill-opacity="1" />
+            </g>
+            <!--
+            <g id="clearPlot" transform="translate(52) scale(.5)">
+                <path d="M 0 0 H 13 L 18 5 V 26 H 0 Z" />
+                <path d="M 13 0 V 5 H 18" />
+            </g>
+            -->
+        </svg>
+        <div id="intro-text">
+            <h1>DIGItal KOMpass</h1>
+            <h2>Connect phone</h2>
+            <p>
+                To connect a cellphone running digikom to a computer, scan the following qr code.
+            </p>
+            <div id="qrcode"></div>
+            <p id="connect-link"></p>
+        </div>
+    </div>
+    <!-- menu here https://www.w3schools.com/howto/howto_js_sidenav.asp -->
+    <a id="csvAnchor" display="none"></a>
+    <script src="js/digikom.js"></script>
+    <script src="js/gyronorm.complete.min.js"></script>
+    <script src="js/peer.min.js"></script>
+     <script src="js/qrcode.min.js"></script>
+    <script>
+        // from https://stackoverflow.com/a/5367656/1457481
+        function padLeft(nr, n, str) {
+            return Array(n - String(nr).length + 1).join(str || '0') + nr;
+        }
+        var at = Auttitude;
+        var pointPlot = document.getElementById('stereoPoints');
+        var dataPlot = document.getElementById('dataPoints');
+        var svg = document.getElementById('stereoPlot');
+        var phoneMarkerPlane = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "circle"
+        );
+        var phoneMarkerLine = document.createElementNS(
+            "http://www.w3.org/2000/svg",
+            "circle"
+        );
+        var phone_gc = document.getElementById('phone-gc');
+        var marked_planes = [];
+        var marked_lines = [];
+        var orientationVector = false;
+        phoneMarkerPlane.setAttribute("id", "orientationPlane");
+        phoneMarkerPlane.setAttribute("cx", 0);
+        phoneMarkerPlane.setAttribute("cy", 0);
+        phoneMarkerPlane.setAttribute("r", ".03");
+        phoneMarkerLine.setAttribute("id", "orientationLine");
+        phoneMarkerLine.setAttribute("cx", 0);
+        phoneMarkerLine.setAttribute("cy", 0);
+        phoneMarkerLine.setAttribute("r", ".03");
+        phoneMarkerLine.style.display = "none";
+        pointPlot.appendChild(phoneMarkerPlane);
+        pointPlot.appendChild(phoneMarkerLine);
+        function handleOrientation(event) {
+            if (needle_lock != lock_toggle) {
+                if (orientationVector && mark_points) {
+                    if (!plane_toggle) {
+                        var projected_point = at.projectEqualArea(
+                            orientationVector
+                        );
+                        marked_planes.push(
+                            at.spherePlane(orientationVector)
+                        );
+                        var point_class = "plotPoint plane";
+                    } else {
+                        var vector = orientationVector.dip_vector();
+                        var projected_point = at.projectEqualArea(
+                            vector
+                        );
+                        marked_lines.push(
+                            at.sphereLine(vector)
+                        );
+                        var point_class = "plotPoint line";
+                    }
+
+                    var dataMarker = document.createElementNS(
+                        "http://www.w3.org/2000/svg",
+                        "circle"
+                    );
+                    dataMarker.setAttribute("cx", projected_point[0]);
+                    dataMarker.setAttribute("cy", projected_point[1]);
+                    dataMarker.setAttribute("class", point_class);
+                    dataPlot.appendChild(dataMarker);
+                    orientationVector = false;
+                }
+                return;  // needle is locked
+            };
+            orientationVector = at.dcosPlaneEuler([event.alpha, event.beta, event.gamma]);
+            var dipVector = orientationVector.dip_vector();
+            var new_gc = orientationVector.great_circle();
+            phone_gc.points.clear();
+            for (var i = 0; i < 180; i++) {
+                var proj_gc = at.projectEqualArea(new_gc[i]);
+                var point = svg.createSVGPoint();
+                point.x = proj_gc[0];
+                point.y = proj_gc[1];
+                phone_gc.points.appendItem(point);
+            }
+            if (!plane_toggle) {
+                var sphere = at.spherePlane(orientationVector);
+            } else {
+                var sphere = at.sphereLine(dipVector);
+            }
+            document.getElementById("projectionText").innerHTML = padLeft(sphere[0].toFixed(0), 3) + "/" + padLeft(sphere[1].toFixed(0), 2);
+            var projected_plane = at.projectEqualArea(
+                orientationVector
+            );
+            var projected_line = at.projectEqualArea(
+                dipVector
+            );
+            phoneMarkerPlane.setAttribute("cx", projected_plane[0]);
+            phoneMarkerPlane.setAttribute("cy", projected_plane[1]);
+            phoneMarkerLine.setAttribute("cx", projected_line[0]);
+            phoneMarkerLine.setAttribute("cy", projected_line[1]);
+        }
+        var gn = new GyroNorm();
+        var needle_lock = false;
+        var lock_toggle = false;
+        var plane_toggle = false;
+        var mark_points = true;
+        var connected = false;
+        var conn = {};
+        gn.init({ orientationBase: GyroNorm.WORLD, frequency: 16 }).then(function () {
+            if (gn.isAvailable(GyroNorm.DEVICE_ORIENTATION)) {
+                gn.start(function (event) {
+                    if (connected) {
+                        conn.send(event.do);
+                    }
+                    handleOrientation(event.do);
+                });
+            } else {
+                var peer = new Peer({port: 443, secure: true});
+                peer.on('open', function (id) {
+                    var qrcode = new QRCode(document.getElementById("qrcode"), window.location.href + "#" + id);
+                    document.getElementById("connect-link").innerHTML =
+                    `or open the following link on your cellphone <a href=\"${window.location.href + "#" + id}\">${window.location.href + "#" + id}</a>`
+                    peer.on('connection', function (conn) {
+                        conn.on('data', function (data) {
+                            handleOrientation(data);
+                        });
+                    });
+                });
+            }
+        }).catch(function (e) {
+            var peer = new Peer({port: 443, secure: true});
+            peer.on('open', function (id) {
+                // https://davidshimjs.github.io/qrcodejs/
+                var qrcode = new QRCode(document.getElementById("qrcode"), window.location.href + "#" + id);
+                peer.on('connection', function (conn) {
+                    conn.on('data', function (data) {
+                        handleOrientation(data);
+                    });
+                });
+            });
+        });
+        // https://stackoverflow.com/a/6682514/1457481
+        if (window.location.hash) {
+            var pc_id = window.location.hash.substring(1);
+            var peer = new Peer({port: 443, secure: true});
+            peer.on('open', function (id) {
+                conn = peer.connect(pc_id);
+                conn.on('open', function () {
+                    connected = true;
+                });
+            });
+        }
+        document.getElementById("lockTriggerGroup").addEventListener("touchstart", function (event) {
+            event.preventDefault();
+            needle_lock = true;
+            //window.navigator.vibrate(50);
+        });
+        document.getElementById("lockTriggerGroup").addEventListener("touchend", function (event) {
+            event.preventDefault();
+            needle_lock = false;
+            //window.navigator.vibrate(50);
+        });
+        document.getElementById("lockToggleGroup").addEventListener("touchstart", function (event) {
+            event.preventDefault();
+            if (!lock_toggle) {
+                document.getElementById("lockOn").style.display = "initial";
+                document.getElementById("lockOff").style.display = "none";
+                lock_toggle = true;
+            } else {
+                document.getElementById("lockOn").style.display = "none";
+                document.getElementById("lockOff").style.display = "initial";
+                lock_toggle = false;
+            }
+
+        });
+        document.getElementById("planeToggleGroup").addEventListener("touchstart", function (event) {
+            event.preventDefault();
+            if (!plane_toggle) {
+                document.getElementById("planeMeasureOn").style.display = "none";
+                document.getElementById("planeMeasureOff").style.display = "initial";
+                phoneMarkerPlane.style.display = "none";
+                phoneMarkerLine.style.display = "initial";
+                phone_gc.style.display = "none";
+                orientationVector = false;
+                plane_toggle = true;
+            } else {
+                document.getElementById("planeMeasureOn").style.display = "initial";
+                document.getElementById("planeMeasureOff").style.display = "none";
+                phoneMarkerPlane.style.display = "initial";
+                phoneMarkerLine.style.display = "none";
+                phone_gc.style.display = "initial";
+                orientationVector = false;
+                plane_toggle = false;
+            }
+        });
+        var toggleMarker = document.getElementById("toggleMarker");
+        toggleMarker.addEventListener("touchstart", function (event) {
+            event.preventDefault();
+            if (mark_points) {
+                // https://www.kirupa.com/html5/setting_css_styles_using_javascript.htm
+                toggleMarker.classList.add("disabledMarker");
+                mark_points = false;
+            } else {
+                toggleMarker.classList.remove("disabledMarker");
+                mark_points = true;
+            }
+        });
+        document.getElementById("saveFloppy").addEventListener("touchstart", function (event) {
+            event.preventDefault();
+            // https://stackoverflow.com/a/14966131/1457481 && https://stackoverflow.com/a/18849208/1457481
+            var lineArray = [];
+            if (marked_planes.length) {
+                marked_planes.forEach(function (infoArray, index) {
+                    var line = infoArray.join(",");
+                    lineArray.push(index == 0 ? "data:text/csv;charset=utf-8," + line : line);
+                });
+                var csvContent = lineArray.join("\n");
+                var encodedUri = encodeURI(csvContent);
+                var link = document.getElementById("csvAnchor");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "plane_data.csv");
+                link.click();
+                marked_planes = [];
+            }
+            if (marked_lines.length) {
+                marked_lines.forEach(function (infoArray, index) {
+                    var line = infoArray.join(",");
+                    lineArray.push(index == 0 ? "data:text/csv;charset=utf-8," + line : line);
+                });
+                var csvContent = lineArray.join("\n");
+                var encodedUri = encodeURI(csvContent);
+                var link = document.getElementById("csvAnchor");
+                link.setAttribute("href", encodedUri);
+                link.setAttribute("download", "line_data.csv");
+                link.click();
+                marked_lines = [];
+            }
+        });
+    </script>
+</body>
+
+</html>

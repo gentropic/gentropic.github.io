@@ -1,0 +1,992 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Previous — older work</title>
+    <link rel="icon" type="image/svg+xml" href="../gcu-favicon-32.svg">
+
+    <!-- GCU design system (switchboard) + its typefaces -->
+    <link rel="stylesheet" href="../switchboard.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Barlow:wght@400;500;600&family=Space+Mono&display=swap">
+
+    <style>
+        /* previous/ — a reading surface. switchboard owns the system (tokens · type ·
+           basalt · copper). gwern owns the reading dialect only (measure · margin
+           sidenotes · stamps). The past is shown running, in its own skin. */
+        :root { --brand-copper: #b87333; --brand-copper-bright: #d4894a; }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            background: var(--au-surface);
+            color: var(--au-fg-muted);
+            font-family: var(--au-font-sans);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+        a { color: var(--brand-copper); text-decoration: none; }
+        a:hover { color: var(--brand-copper-bright); text-decoration: underline; }
+        code { font-family: var(--au-font-mono); font-size: 0.9em; }
+
+        .page { max-width: 64rem; margin: 0 auto; padding: 3.5rem 2rem 6rem; }
+        .measure { max-width: 42rem; }
+
+        header.masthead { margin-bottom: 2.5rem; }
+        header.masthead h1 {
+            font-weight: 600; font-size: 1.9rem; color: var(--au-fg);
+            letter-spacing: 0.01em; line-height: 1.1;
+        }
+        header.masthead .sub { color: var(--au-fg-soft); font-size: 0.95rem; margin-top: 0.3rem; }
+
+        .lede p { color: var(--au-fg-soft); margin-bottom: 1rem; }
+        .lede em { color: var(--au-fg); font-style: normal; font-weight: 500; }
+
+        .entry { margin-top: 3.5rem; }
+        .stamp {
+            font-family: var(--au-font-mono); font-size: 0.72rem;
+            color: var(--au-fg-soft); text-transform: uppercase; letter-spacing: 0.12em;
+        }
+        .entry h2 {
+            font-weight: 600; font-size: 1.4rem; color: var(--au-fg);
+            margin: 0.3rem 0 1rem; letter-spacing: 0.01em;
+        }
+        .entry p { margin-bottom: 1rem; }
+
+        /* sidenotes → right margin on wide screens, inline otherwise */
+        .sidenote {
+            font-size: 0.8rem; line-height: 1.5; color: var(--au-fg-soft);
+            border-left: 2px solid var(--brand-copper); padding-left: 0.75rem;
+        }
+        @media (min-width: 60rem) {
+            .sidenote { float: right; clear: right; width: 14rem; margin-right: -16rem; margin-bottom: 1rem; }
+        }
+        @media (max-width: 60rem) { .sidenote { margin: 1rem 0; } }
+        .sidenote .sn-label {
+            display: block; font-family: var(--au-font-mono); font-size: 0.65rem;
+            text-transform: uppercase; letter-spacing: 0.1em;
+            color: var(--brand-copper); margin-bottom: 0.25rem;
+        }
+
+        /* specimen: a live artifact, framed like equipment, scaled to fit (no h-scroll) */
+        .specimen {
+            border: 1px solid var(--au-border, #2a2f31); border-radius: 6px; overflow: hidden;
+            background: var(--au-surface-raised, #16191b); margin: 1.25rem 0;
+        }
+        .specimen .bar {
+            display: flex; align-items: center; gap: 0.6rem; padding: 0.5rem 0.85rem;
+            border-bottom: 1px solid var(--au-border, #2a2f31);
+            font-family: var(--au-font-mono); font-size: 0.72rem; color: var(--au-fg-soft);
+        }
+        .specimen .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--brand-copper); flex: none; }
+        .specimen .bar .url { color: var(--au-fg-muted); }
+        .specimen .bar .live { margin-left: auto; color: var(--brand-copper); }
+        .specimen .embed { width: 100%; overflow: hidden; background: #fff; }
+        .specimen .embed iframe { border: 0; display: block; transform-origin: top left; }
+        /* click-to-run: heavy embeds stay dormant until asked, so the page never chugs */
+        .specimen .embed.off { min-height: 200px; background: var(--au-surface-raised, #16191b);
+            display: flex; align-items: center; justify-content: center; }
+        .specimen .embed.off iframe { display: none; }
+        .specimen .run-btn {
+            font-family: var(--au-font-mono); font-size: 0.82rem; letter-spacing: 0.04em;
+            color: var(--au-fg); background: transparent; cursor: pointer; text-align: center;
+            border: 1px solid var(--brand-copper); border-radius: 4px; padding: 0.7rem 1.2rem;
+            transition: background var(--au-dur, .15s) var(--au-ease, ease), color var(--au-dur, .15s) var(--au-ease, ease);
+        }
+        .specimen .run-btn:hover { background: var(--brand-copper); color: #0e1113; }
+        .specimen .run-btn small { display: block; color: var(--au-fg-soft); font-size: 0.66rem;
+            margin-top: 0.3rem; letter-spacing: 0; }
+        .specimen .run-btn:hover small { color: #0e1113; }
+        /* poster variant — a static screenshot (for desktop apps that can't be embedded) */
+        .specimen .poster { display: block; width: 100%; height: auto; }
+        /* source variant — for artifacts where the code IS the thing to show */
+        .specimen .source {
+            margin: 0; padding: 1rem 1.1rem; overflow-x: auto; white-space: pre;
+            background: #0e1113; tab-size: 2;
+            font-family: var(--au-font-mono); font-size: 0.74rem; line-height: 1.5;
+            color: var(--au-fg-muted);
+        }
+        .specimen figcaption {
+            padding: 0.6rem 0.85rem; font-size: 0.78rem; color: var(--au-fg-soft);
+            border-top: 1px solid var(--au-border, #2a2f31);
+        }
+        /* credit — preserve the attributions each original page made */
+        .entry .credit {
+            max-width: 42rem; margin-top: 1.1rem;
+            font-size: 0.76rem; line-height: 1.55; color: var(--au-fg-soft);
+        }
+        .entry .credit b {
+            font-family: var(--au-font-mono); font-weight: 400; font-size: 0.65rem;
+            text-transform: uppercase; letter-spacing: 0.1em; color: var(--brand-copper);
+            margin-right: 0.5rem;
+        }
+
+        .ahead { margin-top: 3.5rem; padding-top: 1.75rem; border-top: 1px dashed var(--au-border, #2a2f31); }
+        .ahead .stamp { color: var(--brand-copper); }
+        .ahead ul { margin: 0.75rem 0 0 1.1rem; color: var(--au-fg-soft); font-size: 0.92rem; }
+        .ahead li { margin-bottom: 0.35rem; }
+
+        footer.motto {
+            margin-top: 5rem; padding-top: 1.5rem; border-top: 1px solid var(--au-border, #2a2f31);
+            font-family: var(--au-font-mono); font-size: 0.75rem; color: var(--au-fg-soft);
+        }
+    </style>
+</head>
+<body>
+    <div class="page">
+        <header class="masthead">
+            <h1>Previous</h1>
+            <div class="sub">older work, mostly geology in a browser</div>
+        </header>
+
+        <div class="measure lede">
+            <p>
+                Most of this is older than the GCU's name. It starts at my master's, with desktop
+                tools I wrote in Python, and moves into the browser once I picked up JavaScript around
+                2017 — mostly to get geology into a tab (stereonets, a phone compass, drillhole tools),
+                partly because the browser APIs were fun to poke at.
+            </p>
+            <p>
+                The desktop tools are shown as screenshots, since they don't run in a browser;
+                everything after is collected still <em>running</em>, in its original state, rather
+                than as screenshots of dead links. A fair amount of what the GCU does now started as
+                one of these.
+            </p>
+        </div>
+
+        <!-- ───────────────────────── circa 2016 · desktop roots ───────────────────────── -->
+        <article class="entry">
+            <div class="measure">
+                <div class="stamp">circa 2016 · before the browser</div>
+                <h2>Desktop roots — the master's tools</h2>
+
+                <aside class="sidenote">
+                    <span class="sn-label">note</span>
+                    <code>auttitude</code> — the structural-geology engine behind everything that
+                    follows, right up to today's <a href="https://www.npmjs.com/package/@gcu/bearing">@gcu/bearing</a>
+                    — lives here, in OpenStereo. The browser experiments after this are mostly ports
+                    and sketches off these desktop tools.
+                </aside>
+
+                <p>
+                    Before endarthur.github.io existed there were desktop tools, written in Python.
+                    The main one is <strong>OpenStereo</strong> — a GUI for directional-data and
+                    structural-geology analysis (load orientation data, plot poles and great circles on
+                    a stereonet, contour their density, run the statistics). It isn't mine originally:
+                    it was created by Carlos Grohmann and Ginaldo Campanha at USP around 2010. I took it
+                    over for the 2.0 rewrite as my master's work and still maintain it — and I built its
+                    numerical engine, <code>auttitude</code>, as a separate library, which is exactly
+                    why I could later port a slice of it to JavaScript for the browser compass and
+                    everything that came after.
+                </p>
+                <p>
+                    The other line is mesh analysis. <strong>Capivaras</strong> takes a photogrammetry
+                    model of an outcrop and lets you pick surfaces straight off it on the GPU —
+                    extracting attitudes and roughness, and tracing structures semi-automatically with
+                    Dijkstra's shortest path over the mesh treated as a graph. It's the self-contained
+                    successor to ply2atti and scanline. The AR-desurvey and photogrammetry experiments
+                    later in the browser are the lightweight cousins of this.
+                </p>
+            </div>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">OpenStereo 2.0b — directional-data analysis (Python)</span>
+                    <span class="live">● the master's project</span>
+                </div>
+                <img class="poster" src="img/openstereo.png"
+                     alt="OpenStereo — desktop stereonet analysis GUI with poles and density contours">
+                <figcaption>
+                    Poles and density contours on an equal-area net (the Tocher dataset, 200 poles).
+                    The desktop home of <code>auttitude</code> — and where the stereonet thread that
+                    runs through this whole page begins.
+                </figcaption>
+            </figure>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">Capivaras — GPU-picking outcrop-mesh analysis (Python)</span>
+                    <span class="live">● the mesh line</span>
+                </div>
+                <img class="poster" src="img/capivaras.png"
+                     alt="Capivaras — plane sets picked off a photogrammetry outcrop mesh">
+                <figcaption>
+                    Plane sets picked straight off a photogrammetry outcrop mesh; traces by
+                    shortest-path over the mesh-as-graph. The self-contained successor to ply2atti +
+                    scanline.
+                </figcaption>
+            </figure>
+
+            <p class="credit"><b>credit</b> <a href="http://carlosgrohmann.com/openstereo/">OpenStereo</a>
+                was created by C.H. Grohmann &amp; G.A.C. Campanha (USP, AGU 2010); I did the 2.0
+                rewrite, maintain it, and built its <code>auttitude</code> engine. Capivaras is part of
+                Camila Duelis Viana's PhD; its predecessors ply2atti + scanline are from Viana (2016).</p>
+        </article>
+
+        <!-- ───────────────────────── 2017 ───────────────────────── -->
+        <article class="entry">
+            <div class="measure">
+                <div class="stamp">2017 · the first page</div>
+                <h2>Stereonets on HTML</h2>
+
+                <aside class="sidenote">
+                    <span class="sn-label">note</span>
+                    The stereonet runs on <code>auttitude</code>, a small structural-geology
+                    library I'd been writing. Its descendant,
+                    <a href="https://www.npmjs.com/package/@gcu/bearing">@gcu/bearing</a>, draws
+                    the stereonet on the current GCU landing — same idea, about eight years apart.
+                </aside>
+
+                <p>
+                    My first personal page. The heading — <em>Computatro et Malleo</em>, roughly
+                    "by computer and by hammer" — stuck, and it's still the motto. I'd just picked
+                    up JavaScript and wanted to see what the browser could do with structural data.
+                </p>
+                <p>
+                    On a phone it works as a rough geological compass: device orientation drives an
+                    equal-area stereonet, with a trigger to lock a reading. It's experimental — I
+                    wouldn't measure anything real with it — but it's where the habit of putting
+                    geology in a browser started.
+                </p>
+            </div>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">endarthur.github.io</span>
+                    <span class="live">● 2017 · runs live</span>
+                </div>
+                <div class="embed">
+                    <iframe data-src="https://endarthur.github.io/" loading="lazy"
+                            data-w="1100" data-h="680"
+                            title="endarthur.github.io — the 2017 front page"></iframe>
+                </div>
+                <figcaption>
+                    The actual page, embedded and running. On a desktop it's the static stereonet
+                    and the motto; on a phone with a compass it becomes the instrument. The sibling
+                    <a href="https://endarthur.github.io/os.html">os.html</a> is a dedicated plotter.
+                </figcaption>
+            </figure>
+            <p class="credit"><b>credit</b> Device-orientation handled with
+                <a href="https://github.com/dorukeker/gyronorm.js">gyronorm.js</a> (Doruk Eker);
+                the stereonet maths is my own <code>auttitude</code>.</p>
+        </article>
+
+        <!-- ───────────────────────── 2017–2018 · Digikom ───────────────────────── -->
+        <article class="entry">
+            <div class="measure">
+                <div class="stamp">2017–2018 · DIGItal KOMpass</div>
+                <h2>Digikom — the phone becomes the needle</h2>
+
+                <aside class="sidenote">
+                    <span class="sn-label">note</span>
+                    Serverless by instinct, already: phone and desktop pair <em>peer-to-peer</em> over
+                    WebRTC with no server, and you connect them by scanning a QR code — a whole little
+                    app joined by a QR, years before that became a GCU habit (capsule, cradle).
+                </aside>
+
+                <p>
+                    DIGItal KOMpass — and despite my presenting it at TRANSFORM 2020, it's really a
+                    2017 thing (the copyright header gives it away), the front page's very next step.
+                    The page-as-compass was fine, but the screen sits on the same device you're pressing
+                    against the rock. So I split it in two: the phone is the sensor, the desktop is the
+                    display, and they talk straight to each other over WebRTC. You pair them by scanning
+                    a QR the desktop shows — no server, no app, no accounts.
+                </p>
+                <p>
+                    It's also where those toolbar icons live that you spotted first — the save-floppy
+                    and the dip-pen, drawn by hand on millimetre paper and typed out as SVG paths,
+                    coordinate by coordinate. I'd lost the source years ago; this copy was pulled back
+                    from the deployed page, so it's preserved now, hand-drawn icons and all.
+                </p>
+            </div>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">previous/digikom/ — recovered from digikom.surge.sh</span>
+                    <span class="live">● 2017 · preserved</span>
+                </div>
+                <div class="embed">
+                    <iframe data-src="digikom/index.html" loading="lazy"
+                            data-w="1100" data-h="620"
+                            title="Digikom — the preserved DIGItal KOMpass app"></iframe>
+                </div>
+                <figcaption>
+                    The recovered app, running from a local copy so it outlives surge.sh. On a desktop:
+                    the stereonet, the connect-phone QR, and that hand-drawn toolbar; pair a phone and
+                    its orientation drives the plot.
+                </figcaption>
+            </figure>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">the hand-drawn toolbar — SVG typed off graph paper</span>
+                    <span class="live">● 2017 · source</span>
+                </div>
+<pre class="source"><code>&lt;g id="saveFloppy" transform="translate(82) scale(.5)"&gt;
+  &lt;path d="M 0 0 H 24 L 25 1 V 26 H 0 Z" /&gt;
+  &lt;path d="M 2.2 26 V 11 H 22 V 26" /&gt;
+  &lt;path d="M 2.2 0 V 8 A 1 1 0 0 0 3.2 9 H 18 A 1 1 0 0 0 19 8 V 0" /&gt;
+  &lt;path d="M 6 0 V 8 A 1 1 0 0 0 7 9 H 18 A 1 1 0 0 0 19 8 V 0" /&gt;
+  &lt;path d="M 13 1 H 17 V 8 H 13 Z" /&gt;
+  &lt;path d="M 23 23 H 24 V 24 H 23 Z" /&gt;
+  &lt;path d="M 0.6 23 H 1.6 V 24 H 0.6 Z" /&gt;
+&lt;/g&gt;
+&lt;g id="toggleMarker" transform="translate(15) rotate(45) scale(.5)"&gt;
+  &lt;path d="M 0 0 V 20 H 7 V 0" /&gt;
+  &lt;path d="M 1.5 20 V 25 H 5.5 V 20" /&gt;
+  &lt;path d="M 3 25 V 30 H 4 V 25" /&gt;
+  &lt;path d="M 3 30 V 31 H 4 V 30 Z" fill-opacity="1" /&gt;
+&lt;/g&gt;</code></pre>
+                <figcaption>
+                    The save-floppy (with its clipped corner and the little shutter arcs) and the
+                    dip-pen — every coordinate a whole or half integer, read straight off the grid. A
+                    third icon, a "clear" page, sits commented-out in the original, never finished.
+                </figcaption>
+            </figure>
+
+            <p class="credit"><b>credit</b> Peer-to-peer with <a href="https://peerjs.com/">PeerJS</a>;
+                device orientation via <a href="https://github.com/dorukeker/gyronorm.js">gyronorm.js</a>
+                (Doruk Eker); QR codes by <a href="https://davidshimjs.github.io/qrcodejs/">qrcodejs</a>
+                (David Shim); stereonet maths my own <code>auttitude</code>.</p>
+        </article>
+
+        <!-- ───────────────────────── 2019 · june ───────────────────────── -->
+        <article class="entry">
+            <div class="measure">
+                <div class="stamp">2019 · june</div>
+                <h2>Drillhole desurvey, with the maths shown</h2>
+
+                <aside class="sidenote">
+                    <span class="sn-label">note</span>
+                    Desurveying — turning a hole's depth/azimuth/dip survey into a real 3D path — is
+                    the oldest ancestor of the GCU's drillhole and block-model work. Same job,
+                    hand-rolled in a browser tab.
+                </aside>
+
+                <p>
+                    This is the one I kept coming back to. Desurveying is the unglamorous step that
+                    turns a drillhole's downhole survey — depth, azimuth, dip at intervals — into an
+                    actual path in 3D, and it's fiddlier than it looks. So I wrote out the derivation
+                    (tangent and minimum-curvature), and then, because it's easier to see than read,
+                    built a small three.js drillhole editor next to it.
+                </p>
+                <p>
+                    Paste a survey, set lithology intervals, watch the hole draw in 3D, export a GLB —
+                    and that GLB feeds the AR and WebXR viewers, so you can stand a drillhole on your
+                    desk through a phone. Maths, tool, and pipeline in one page.
+                </p>
+            </div>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">endarthur.github.io/writing/desurvey.html</span>
+                    <span class="live">● 2019 · runs live</span>
+                </div>
+                <div class="embed">
+                    <iframe data-src="https://endarthur.github.io/writing/desurvey.html" loading="lazy"
+                            data-w="1100" data-h="760"
+                            title="desurvey — derivation + interactive drillhole editor"></iframe>
+                </div>
+                <figcaption>
+                    The page itself — the derivation up top, the interactive drillhole editor below.
+                    Written in 2019, tweaked through 2020: the maths didn't change, the browser APIs did.
+                </figcaption>
+            </figure>
+            <p class="credit"><b>credit</b> Method after the drillhole-desurvey write-ups by the
+                <a href="https://web.archive.org/web/20190628005247/https://blog.leapfrog3d.com/2013/06/20/the-dark-art-of-drillhole-desurveying/">Leapfrog blog</a>
+                and <a href="https://web.archive.org/web/20190628214612/http://home.btconnect.com/SiliconDale/silicon13.htm">Steve Henley</a>;
+                3D + GLTF export with <a href="https://threejs.org/">three.js</a> (its official exporter example).</p>
+        </article>
+
+        <!-- ───────────────────────── 2019 · june 28 ───────────────────────── -->
+        <article class="entry">
+            <div class="measure">
+                <div class="stamp">2019 · june 28</div>
+                <h2>The stereonet calculator</h2>
+
+                <aside class="sidenote">
+                    <span class="sn-label">note</span>
+                    This is <code>auttitude</code> becoming a real JavaScript library — the same code
+                    that, a few iterations on, is <a href="https://www.npmjs.com/package/@gcu/bearing">@gcu/bearing</a>.
+                    The 2017 page used its first rough version; here it's getting structured.
+                </aside>
+
+                <p>
+                    Made the day after desurvey, and about as bare as it looks: an equal-area
+                    stereonet and two number boxes. Type a plane's attitude — dip direction and dip —
+                    and its pole and great circle move on the net as you type. That's the whole
+                    interface, and honestly that's all I wanted: the smallest possible "see the
+                    geometry while you enter it."
+                </p>
+                <p>
+                    The real work was underneath. I was porting <code>auttitude</code> — my
+                    structural-geology library — to JavaScript properly, as ES modules this time. Half
+                    the source is commented-out experiments: arcs between points, small circles, plane
+                    intersections. It's more workbench than page, and I kept it that way.
+                </p>
+            </div>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">endarthur.github.io/writing/attitude.html</span>
+                    <span class="live">● 2019 · runs live</span>
+                </div>
+                <div class="embed">
+                    <iframe data-src="https://endarthur.github.io/writing/attitude.html" loading="lazy"
+                            data-w="1100" data-h="600"
+                            title="attitude — interactive stereonet calculator"></iframe>
+                </div>
+                <figcaption>
+                    Live — type an attitude in the two boxes and the plane moves, pole and great
+                    circle. Sparse on purpose; the work was porting auttitude to JS underneath.
+                </figcaption>
+            </figure>
+        </article>
+
+        <!-- ───────────────────────── 2019 · july ───────────────────────── -->
+        <article class="entry">
+            <div class="measure">
+                <div class="stamp">2019 · july</div>
+                <h2>VR on a path</h2>
+
+                <aside class="sidenote">
+                    <span class="sn-label">note</span>
+                    A tool that writes a tool — the generator's whole job is to assemble another
+                    <em>self-contained</em> page you just host and open. That "the output is one file
+                    you can run anywhere" instinct is the same one behind the GCU's single-file work.
+                </aside>
+
+                <p>
+                    Exactly what it says, and yes — it's a bit nauseating. A-Frame had just made WebVR
+                    genuinely easy, so I made a small generator: mark a path over a 3D model in MeshLab
+                    point by point, hand it the model and the picked-points file, set a camera height
+                    and a duration, and it spits out a standalone HTML page that flies you along that
+                    path in VR — phone, headset, whatever. The fly-along-the-path motion itself is a
+                    component by josepedrodias (via an answer from ngokevin) — that did most of the
+                    real work; I wrote the part that assembles the page. Mostly I was flying through
+                    photogrammetry models of outcrops.
+                </p>
+                <p>
+                    There's no collision detection, so the camera will happily hug and clip through the
+                    ground if you forget to lift it, and a quick path is a straight line to motion
+                    sickness — the page literally suggests shrinking the model and slowing down to
+                    cope. Janky, but I'm still fond of it.
+                </p>
+            </div>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">endarthur.github.io/writing/aframe_path.html</span>
+                    <span class="live">● 2019 · runs live</span>
+                </div>
+                <div class="embed">
+                    <iframe data-src="https://endarthur.github.io/writing/aframe_path.html" loading="lazy"
+                            data-w="1100" data-h="720"
+                            title="aframe_path — a generator for VR flythrough pages"></iframe>
+                </div>
+                <figcaption>
+                    The generator itself — pick a path in MeshLab, give it the model and a duration,
+                    and it downloads a standalone VR page. The flythrough (and the nausea) is the
+                    generated output, not this form.
+                </figcaption>
+            </figure>
+            <p class="credit"><b>credit</b> The
+                <a href="https://stackoverflow.com/a/39518746/1457481">along-path component</a>
+                is josepedrodias's (via ngokevin); built on <a href="https://aframe.io/">A-Frame</a>
+                + <a href="https://github.com/n5ro/aframe-extras">aframe-extras</a> (Don McCurdy).
+                Example model: <a href="https://sketchfab.com/3d-models/quarry-slope-616d5d03047c47028fed7ae7b0488d94">"Quarry Slope" by DronWork</a> (Sketchfab).</p>
+        </article>
+
+        <!-- ───────────────────────── 2019 · stereo panoramas ───────────────────────── -->
+        <article class="entry">
+            <div class="measure">
+                <div class="stamp">2019</div>
+                <h2>Stereo panoramas, by slit-scan</h2>
+
+                <aside class="sidenote">
+                    <span class="sn-label">note</span>
+                    It would actually work if you placed each column from <em>image flow</em> —
+                    tracking the picture's motion frame to frame — instead of the magnetometer.
+                    Banked as a rebuild candidate; the same "don't trust the compass" lesson runs
+                    through the GCU's later orientation work.
+                </aside>
+
+                <p>
+                    This one I'm fond of, even though it barely works — and the idea isn't even mine.
+                    It's <a href="https://paulbourke.net/stereographics/stereopanoramic/">Paul Bourke's</a>
+                    (the same Paul Bourke whose <a href="https://paulbourke.net/dataformats/">file-format
+                    encyclopedia</a> half the internet has landed on at some point): as a camera rotates,
+                    extract a narrow vertical slit from each frame and stitch the slits into a panorama;
+                    take two slits, slightly offset, and the parallax between them gives a <em>stereo</em>
+                    pair you can cross your eyes at. He traces it to the analog rotating slit-cameras —
+                    the Roundshots and their kin.
+                </p>
+                <p>
+                    I just wired it into a phone browser. As you turn, every time the compass ticks to a
+                    new bearing it grabs a one-pixel strip — 720 of them for a full circle — sampling a
+                    third and two-thirds of the way across the frame for the two eyes. getUserMedia,
+                    device orientation, a canvas; about sixty lines, no libraries.
+                </p>
+                <p>
+                    The catch, and you feel it instantly: it leans entirely on the phone's compass to
+                    know where each strip belongs, and the compass is jittery and drifts. So unless
+                    you've got a very stable rotating base, the columns smear and the panorama tears.
+                    Honestly more a lovely idea than a working tool.
+                </p>
+            </div>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">stereopanoramics.html — the slit-scan core</span>
+                    <span class="live">● 2019 · source</span>
+                </div>
+<pre class="source"><code>const constraints = { video: { facingMode: "environment" } };
+
+const azimuth_resolution = 720;
+var disparity = 60;
+var h;
+var li, ri;
+
+var plunge = new Float32Array(azimuth_resolution);
+
+function handleSuccess(stream) {
+  video.srcObject = stream;
+  h = stream.getVideoTracks()[0].getSettings().height;
+  right.height = h;
+  left.height = h;
+  right.width = azimuth_resolution;
+  left.width = azimuth_resolution;
+  right_ctx = right.getContext("2d");
+  left_ctx = left.getContext("2d");
+
+  ri = Math.floor((h * 2) / 3);
+  li = Math.floor(h / 3);
+  window.addEventListener("deviceorientation", handleOrientation);
+}
+
+function handleOrientation(e) {
+  let az = e.alpha;
+  const i = Math.floor(
+    (((az + 360.0) % 360.0) * azimuth_resolution) / 360.0
+  );
+  if (plunge[i] === 0.0) {
+    plunge[i] = 1;
+    right_ctx.drawImage(video, ri, 0, 1, h, i, 0, 1, h);
+    left_ctx.drawImage(video, li, 0, 1, h, i, 0, 1, h);
+  }
+}</code></pre>
+                <figcaption>
+                    The whole trick, give or take the camera plumbing: as the compass bearing
+                    (<code>e.alpha</code>) reaches a new value, map it to a column 0–720 and, if that
+                    column is still empty, copy a one-pixel strip of the camera frame into it — two
+                    strips, a third and two-thirds across, for the stereo pair. That's the panorama.
+                </figcaption>
+            </figure>
+            <p class="credit"><b>credit</b> Concept and method:
+                <a href="https://paulbourke.net/stereographics/stereopanoramic/">Paul Bourke</a>
+                (<a href="https://paulbourke.net/papers/vsmm2006/vsmm2006.pdf"><em>Synthetic Stereoscopic Panoramic Images</em></a>, 2006).</p>
+        </article>
+
+        <!-- ───────────────────────── 2019 · november ───────────────────────── -->
+        <article class="entry">
+            <div class="measure">
+                <div class="stamp">2019 · november</div>
+                <h2>Photogrammetry, calibrated with a door</h2>
+
+                <aside class="sidenote">
+                    <span class="sn-label">note</span>
+                    The door-as-ruler is the whole phone-photogrammetry idea in miniature: no special
+                    equipment, just something you know the size of. Same spirit as the desurvey/AR
+                    work — geology measured with whatever's already in your pocket.
+                </aside>
+
+                <p>
+                    Another tiny, half-finished one — the page's <code>&lt;title&gt;</code> still says
+                    "Practical Desurvey" from whatever I copied it off. The useful idea: before you can
+                    do photogrammetry with a phone you need the camera's field of view, and you can get
+                    it from any object of known size and distance. I used a door — a trick I picked up
+                    from a write-up by Forrest Johnson — and in Brazil they're usually 210&nbsp;cm, so
+                    you walk back until it just fills the frame top to bottom, measure the distance, and
+                    <em>FoV = 2·atan(h/2d)</em>. The calculator works it out and caches it in your browser.
+                </p>
+                <p>
+                    The rest is the stereo-panorama trick again — slit-scan as you turn — but wrapped
+                    onto an A-Frame cylinder, sized from that calibrated FoV, so you can look around
+                    inside the panorama in VR. Same compass-drift problem as before; I just liked tying
+                    the calibration to the capture.
+                </p>
+            </div>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">endarthur.github.io/writing/camera.html</span>
+                    <span class="live">● 2019 · runs live</span>
+                </div>
+                <div class="embed">
+                    <iframe data-src="https://endarthur.github.io/writing/camera.html" loading="lazy"
+                            data-w="1100" data-h="620"
+                            title="camera — photogrammetry notes + FoV-from-a-door calibration"></iframe>
+                </div>
+                <figcaption>
+                    The calibration half runs fine here — the door formula and the FoV calculator
+                    (210&nbsp;cm, walk back, done). The camera capture and the VR cylinder below need a
+                    phone.
+                </figcaption>
+            </figure>
+            <p class="credit"><b>credit</b> The door-as-reference trick from a
+                <a href="https://web.archive.org/web/20131123073926/http://forestjohnson.blogspot.com/2010/01/how-to-measure-size-of-object-using.html">write-up by Forrest Johnson</a>;
+                photogrammetry definition per the <a href="https://www.asprs.org/wp-content/uploads/pers/1942journal/dec/1942_dec_247-283.pdf">ASPRS (1942)</a>.</p>
+        </article>
+
+        <!-- ───────────────────────── 2020 · spring ───────────────────────── -->
+        <article class="entry">
+            <div class="measure">
+                <div class="stamp">2020 · spring</div>
+                <h2>Serverless tools — the link is the channel</h2>
+
+                <aside class="sidenote">
+                    <span class="sn-label">note</span>
+                    This is the no-server ethos the GCU now formalises — capsule, cradle, hopper.
+                    State rides in the URL, tabs talk over BroadcastChannel, peers connect directly
+                    over WebRTC. No backend is ever touched.
+                </aside>
+
+                <p>
+                    Spring 2020 — which is to say, lockdown — so I made a run of little tools for
+                    connecting people, all under one rule: <em>no server</em>. A voice call
+                    (<code>dial</code>), a call with screen-share (<code>com</code>), plain screen
+                    sharing (<code>screen</code>), live location on a map (<code>location</code>). Each
+                    works the same way: you send someone a link, and the link itself carries everything
+                    needed to connect, peer-to-peer over WebRTC. No accounts, nothing to sign up for.
+                </p>
+                <p>
+                    The trick that makes it serverless is this little page, <code>store</code>: open it
+                    with some data packed into the URL fragment and it drops that data into the
+                    browser's storage, or broadcasts it to your other tabs, and closes itself. The link
+                    <em>is</em> the channel — that's the keystone the rest stand on, in about twenty
+                    lines. (I came back to the same idiom in 2023 for a deadman's switch: a tab that
+                    pings a webhook if it ever goes quiet.)
+                </p>
+            </div>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">tools/store.html — the serverless keystone</span>
+                    <span class="live">● 2020 · source</span>
+                </div>
+<pre class="source"><code>if (window.location.hash) {
+  const encodedData = window.location.hash.substring(1);
+  const decodedData = decodeURIComponent(encodedData);
+  const parsedData = JSON.parse(decodedData);
+  switch (parsedData.target) {
+    case "local":
+      window.localStorage[parsedData.key] = parsedData.data;
+      break;
+    case "session":
+      window.sessionStorage[parsedData.key] = parsedData.data;
+      break;
+    case "broadcast":
+      const bc = new BroadcastChannel(parsedData.channel);
+      bc.postMessage(parsedData.data);
+    default:
+      break;
+  }
+  if (parsedData.close) {
+    window.close();
+  }
+}</code></pre>
+                <figcaption>
+                    The entire page, give or take the boilerplate. Pass it state through the URL,
+                    it stores or broadcasts it — no server in the loop. Everything else just adds
+                    WebRTC on top.
+                </figcaption>
+            </figure>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">endarthur.github.io/tools/location.html</span>
+                    <span class="live">● 2020 · runs live</span>
+                </div>
+                <div class="embed">
+                    <iframe data-src="https://endarthur.github.io/tools/location.html" loading="lazy"
+                            data-w="1100" data-h="520"
+                            title="location — peer-to-peer live location on a map"></iframe>
+                </div>
+                <figcaption>
+                    Live location on a Leaflet map, shared peer-to-peer through a link — no server ever
+                    holds your position. Like the rest, it wants a peer on the far end to do its thing.
+                </figcaption>
+            </figure>
+
+            <p class="credit"><b>credit</b> Peer connections with
+                <a href="https://peerjs.com/">PeerJS</a> and
+                <a href="https://github.com/feross/simple-peer">simple-peer</a> (Feross Aboukhadijeh);
+                the map is <a href="https://leafletjs.com/">Leaflet</a>.</p>
+        </article>
+
+        <!-- ───────────────────────── circa 2020 · ECMAltine ───────────────────────── -->
+        <article class="entry">
+            <div class="measure">
+                <div class="stamp">circa 2020 · the peak</div>
+                <h2>ECMAltine — geology as a little language</h2>
+
+                <aside class="sidenote">
+                    <span class="sn-label">note</span>
+                    The conceptual peak of the repo, and the clearest GCU-engine ancestor: a fault
+                    isn't <em>drawn</em> here, it's a function that displaces space; a fold is a
+                    sine-warp of the coordinate; the model is a fold of those events. Implicit
+                    geological modelling — GemPy's core idea — built as a browser language.
+                </aside>
+
+                <p>
+                    This is the one I find genuinely audacious. ECMAltine is a tiny <em>language</em>
+                    for building geological models — the browser port of <strong>Malt</strong>, a
+                    forward-modelling library I'd been writing in Python. You write planes, faults,
+                    folds and lithologies as composable functions — a plane is a normal vector, a surface is a signed-distance
+                    field, a fault is a function that offsets space on one side of itself, a fold is a
+                    sinusoidal warp of the coordinate — and <code>Model([...])</code> threads a point
+                    through all of them in order, returning the rock code at that location. Geological
+                    history as a pipeline of space-deformations, which is how structural geology
+                    actually composes.
+                </p>
+                <p>
+                    Press run and it evaluates that model across a 128×128×128 grid — two million points
+                    — and bakes the result into a 3D texture: a voxel <em>block model</em>, the same
+                    object BMA chews on today. A hand-patched three.js shader then samples that texture
+                    along cutting planes you can drag through the scene, so you slice live cross-sections
+                    of your geology. A REPL for structural modelling, in a browser tab, around 2020.
+                </p>
+                <p>
+                    And it didn't stop here. A couple of years on I rebuilt it as <strong>jsgem</strong>,
+                    running the implicit model through a marching-cubes worker into actual 3D
+                    <em>meshes</em> instead of sampled sections — GemPy-in-a-browser, properly. For years
+                    I thought that one was gone (never committed, surviving only in a conference
+                    recording) — but it wasn't. It's the next entry, recovered and running. The line
+                    doesn't end on a loss after all.
+                </p>
+            </div>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">endarthur.github.io/tools/ECMAltine.html</span>
+                    <span class="live">● circa 2020 · runs live</span>
+                </div>
+                <div class="embed">
+                    <iframe data-src="https://endarthur.github.io/tools/ECMAltine.html" loading="lazy"
+                            data-w="1400" data-h="720"
+                            title="ECMAltine — a live-coding implicit geological modelling language"></iframe>
+                </div>
+                <figcaption>
+                    Live — the DSL editor on the left, the model's cross-sections on the right. Edit the
+                    geology, press run, drag the section planes through the result. (Open it full-screen
+                    for the real thing; the controls are listed across the top.)
+                </figcaption>
+            </figure>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">the malt engine — geology as functions</span>
+                    <span class="live">● circa 2020 · source</span>
+                </div>
+<pre class="source"><code>function PlanarFault(plane, point, displacement, footwall_movement = false) {
+  const faultSurface = PlanarSurface(plane, point, footwall_movement ? -1.0 : 1.0);
+  return (X, v) =&gt; {
+    if (faultSurface(X) &gt; 0) {
+      X.add(displacement);
+    }
+    return [X, v];
+  };
+}
+
+function SinusoidalFold(hinge, axial_plane_normal, point, amplitude, wavelength) {
+  const axial_trace = new THREE.Vector3()
+    .crossVectors(axial_plane_normal, hinge)
+    .normalize();
+  const axialPlane = PlanarSurface(axial_plane_normal, point);
+  return (X, v) =&gt; {
+    X.addScaledVector(axial_trace, amplitude * Math.sin(axialPlane(X) / wavelength));
+    return [X, v];
+  };
+}
+
+function Lith(surface, code) {
+  return (X, v) =&gt; [X, surface(X) &gt; 0 ? code : v];
+}
+
+function Model(events) {
+  return (X) =&gt; {
+    let code = 0;
+    for (let i = 0; i &lt; events.length; i++) {
+      [X, code] = events[i](X, code);
+      if (code !== 0) break;
+    }
+    return code;
+  };
+}</code></pre>
+                <figcaption>
+                    Every event is a function <code>(X, v) =&gt; [X, v]</code>: a fault displaces space
+                    on one side of itself, a fold warps the coordinate by a sine, a lithology stamps a
+                    rock code, and <code>Model</code> threads a point through them all. Geology as a fold
+                    of functions — the same insight GemPy encodes, hand-built here.
+                </figcaption>
+            </figure>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">Malt — the Python parent (forward-modelling library)</span>
+                    <span class="live">● the original</span>
+                </div>
+                <img class="poster" src="img/malt.png"
+                     alt="Malt — the desktop Python forward-geological-modelling library, with its 3D block">
+                <figcaption>
+                    Where it came from: Malt, the desktop Python original — the same algebra
+                    (<code>ma.PlanarFault</code>, <code>ma.SinusoidalFold</code>, <code>ma.Model</code>),
+                    a Maya-style panel, and the model rendered as a solid 3D block. ECMAltine is its
+                    browser port; jsgem (next) became its meshing successor. (Screenshot from a 2021 portfolio.)
+                </figcaption>
+            </figure>
+
+            <p class="credit"><b>credit</b> 3D with <a href="https://threejs.org/">three.js</a>; the
+                live editor is <a href="https://codemirror.net/5/">CodeMirror</a> + tern + acorn
+                (Marijn Haverbeke), linted by <a href="https://jshint.com/">JSHint</a>.</p>
+        </article>
+
+        <!-- ───────────────────────── 2022 / recovered · jsgem ───────────────────────── -->
+        <article class="entry">
+            <div class="measure">
+                <div class="stamp">2022 · recovered 2026</div>
+                <h2>jsgem — the one we got back</h2>
+
+                <aside class="sidenote">
+                    <span class="sn-label">note</span>
+                    Thought lost for years — never committed, surviving only in a conference recording —
+                    until June 2026, when it turned up as an uncommitted file on an old USB drive and ran
+                    again within the hour. The vault exists for exactly this.
+                </aside>
+
+                <p>
+                    This is where ECMAltine was headed: <strong>jsgem</strong> (or js-gem) runs the same
+                    Malt kernel, but instead of slicing cross-sections it threads the model through a
+                    marching-cubes worker and builds an actual 3D <em>mesh</em> — GemPy-in-a-browser,
+                    properly. A live editor, a terminal, and a meshed geological body you can orbit. I
+                    made it around 2022.
+                </p>
+                <p>
+                    And then I lost it. It was never committed; for years it survived only in the
+                    TRANSFORM conference recording. Until it didn't — in June 2026 it surfaced as a
+                    single uncommitted file on an old hard drive, was recovered, and ran again, meshing
+                    geology in the browser for the first time in four years. The image below is that run.
+                </p>
+            </div>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">jsgem — recovered &amp; running</span>
+                    <span class="live">● 2022 · alive again</span>
+                </div>
+                <img class="poster" src="img/jsgem-mesh.png"
+                     alt="jsgem running — an implicit geological model marching-cubed into a 3D mesh">
+                <figcaption>
+                    112,764 triangles for the first lithology, building the second — the implicit model
+                    in the editor (left), marching-cubed into a solid body (right). Recovered from one
+                    uncommitted copy and run again, four years on.
+                </figcaption>
+            </figure>
+
+            <figure class="specimen">
+                <div class="bar">
+                    <span class="dot"></span>
+                    <span class="url">endarthur.github.io/tools/jsgem.html</span>
+                    <span class="live">● run it yourself</span>
+                </div>
+                <div class="embed">
+                    <iframe data-src="https://endarthur.github.io/tools/jsgem.html" loading="lazy"
+                            data-w="1280" data-h="800"
+                            title="jsgem — the recovered web geological-modelling suite"></iframe>
+                </div>
+                <figcaption>
+                    The recovered suite, live (it builds the default model on load — give the marching
+                    cubes a moment). Goes live once the recovery commit is deployed.
+                </figcaption>
+            </figure>
+
+            <p class="credit"><b>credit</b> Meshing via
+                <a href="https://github.com/nenadmarkus/gridhopping">gridhopping</a> (marching cubes, by
+                Nenad Markuš); 3D with <a href="https://threejs.org/">three.js</a>; editor
+                <a href="https://codemirror.net/5/">CodeMirror</a>; terminal
+                <a href="https://terminal.jcubic.pl/">jQuery Terminal</a>; plus math.js, DanfoJS,
+                PapaParse, WinBox. The <code>ECMAltine.js</code> Malt kernel is my own.</p>
+        </article>
+
+        <!-- ───────────────────────── what's next ───────────────────────── -->
+        <div class="measure ahead">
+            <div class="stamp">still out there</div>
+            <p style="margin-top: 0.75rem; color: var(--au-fg-soft); font-size: 0.92rem; line-height: 1.6;">
+                That's the timeline — desktop roots through 2022, and the lost capstone brought home.
+                One thing's still missing: an <strong style="color: var(--au-fg);">Alexa skill</strong>
+                from around 2019 that did stereonet maths by voice, on <code>auttitude</code>. Its code
+                didn't surface on the old drives; it may yet be recoverable from an Amazon developer
+                account. The hunt continues. <em>Named, not silenced — and, this time, mostly found.</em>
+            </p>
+        </div>
+
+        <footer class="motto" title="Computatro et Malleo">Computatro et Malleo</footer>
+    </div>
+
+    <script>
+        // Embeds are CLICK-TO-RUN: nothing heavy loads until you ask it to, so the page stays
+        // light even with the geomodellers (ECMAltine, jsgem) on it. `zoom` (not transform:
+        // scale) fits each one to its column crisply once it's loaded.
+        function fitOne(box) {
+            const f = box.querySelector('iframe');
+            if (!f || !f.src) return;
+            const w = parseInt(f.dataset.w || '1100', 10);
+            const h = parseInt(f.dataset.h || '680', 10);
+            f.style.zoom = '';
+            const scale = box.clientWidth / w;
+            f.style.width = w + 'px';
+            f.style.height = h + 'px';
+            f.style.zoom = scale;
+        }
+        document.querySelectorAll('.specimen .embed').forEach(box => {
+            const f = box.querySelector('iframe');
+            if (!f) return;
+            box.classList.add('off');
+            const btn = document.createElement('button');
+            btn.className = 'run-btn';
+            btn.innerHTML = '▶ run it live<small>' + (f.title || 'loads + runs on click') + '</small>';
+            box.appendChild(btn);
+            btn.addEventListener('click', () => {
+                box.classList.remove('off');
+                btn.remove();
+                f.addEventListener('load', () => fitOne(box));
+                f.src = f.dataset.src;             // the actual load happens here, on click
+                setTimeout(() => fitOne(box), 500);
+            });
+        });
+        window.addEventListener('resize', () => {
+            document.querySelectorAll('.specimen .embed').forEach(b => {
+                if (!b.classList.contains('off')) fitOne(b);
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,168 @@
+body {
+    font-family: 'Source Sans Pro', sans-serif;
+    background-color: #F8F8F1;
+}
+
+.container {
+    display: grid;
+    height: 100%;
+    grid-template-columns: 2fr 1fr 1fr;
+    grid-template-rows: auto 1fr auto;
+    grid-gap: 15px 10px;
+    grid-template-areas: 
+    "stereo intro intro"
+    "stereo repos academic"
+    "stereobar . .";
+}
+
+#intro-text {
+    grid-area: intro;
+}
+
+#github-repos {
+    grid-area: repos;
+}
+
+#academic {
+    grid-area: academic;
+}
+
+ul.base-list {
+    list-style-type: none;
+}
+
+li {
+    margin: .5em 0;
+}
+
+
+/* With help from https://www.viget.com/articles/color-contrast */
+h1 {
+    color: #555f61;
+}
+
+h2 {
+    color: #555f61;
+}
+
+p {
+    color:#144270;
+}
+
+a {
+    color: #704214;
+}
+
+#stereoPlot {
+    height: 100vw;
+    width: 100vw;
+    grid-area: stereo;
+}
+#stereoToolbar {
+    height: 20vw;
+    width: 100vw;
+    grid-area: stereobar;
+    stroke: #704214;
+    fill: #704214;
+    fill-opacity: 0;
+    stroke-width: 0.5;
+}
+
+#lockTriggerGroup {
+    fill-opacity: 0;
+    stroke: #704214;
+    stroke-width: 0.5;
+    transform: translate(85px, 85px);
+}
+
+#lockToggleGroup {
+    fill-opacity: 0;
+    stroke: #704214;
+    stroke-width: 1;
+    transform: translate(-92.5px, -95px) scale(0.5);
+}
+
+#planeToggleGroup {
+    stroke: #704214;
+    stroke-width: 0.5;
+    transform: translate(80px, -80px) rotate(45);
+}
+
+#stereoDiagram {
+    stroke: #555f61;
+    stroke-width: 0.005;
+}
+
+#stereoCircle {
+    fill: none;
+}
+
+.plotPoint {
+    r: 0.01;
+    fill: #373d3f;
+}
+
+.plotPoint.plane {
+    fill: #e9162d;
+}
+
+.plotPoint.line {
+    fill: #162DE9;
+}
+
+#orientationPlane {
+    stroke: none;
+    fill: #e9162d;
+}
+
+#orientationLine {
+    stroke: none;
+    fill: #162DE9;
+}
+
+#stereoLines {
+    clip-path: url(#clipPrimitive);
+}
+#phone-gc {
+    fill:none;
+    stroke:#e9162d;
+    stroke-width:.005;
+}
+
+svg > g.stereo-element {
+  transform: scale(100, -100);
+}
+
+#projectionText {
+    font-size: 8pt;
+    font-weight: lighter;
+    fill:#704214;
+}
+
+.disabledMarker {
+    stroke: #c2c7c9;
+    fill: #c2c7c9;
+}
+
+@media (orientation: landscape) {
+    #stereoPlot {
+        height: 100vh;
+        width: 100vh;
+    }
+    #stereoToolbar {
+        height: 20vh;
+        width: 100vh;
+    }
+}
+
+@media (orientation: portrait) {
+    .container {
+        grid-template-columns: 1fr 1fr;
+        grid-template-rows: 1fr auto auto;
+        grid-template-areas: 
+        "stereo stereo"
+        "stereobar stereobar"
+        "intro intro"
+        "repos academic";
+    }
+}
