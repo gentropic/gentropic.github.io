@@ -136,6 +136,14 @@
       margin-right:0.5em; vertical-align:middle;
     }
 
+    /* group labels — section dividers for the constellation */
+    .group-label {
+      font-family:var(--au-font-mono); font-size:0.7rem; font-weight:700;
+      letter-spacing:0.18em; text-transform:uppercase; color:var(--au-fg-soft);
+      margin:2.2rem 0 0.85rem; padding-bottom:0.4rem; border-bottom:1px solid var(--au-border-soft);
+    }
+    .group-label:first-of-type { margin-top:0; }
+
     .stack-note {
       text-align:center; margin:2.4rem 0 1.8rem; font-family:var(--au-font-mono);
       font-size:0.72rem; letter-spacing:0.04em; color:var(--au-fg-soft);
@@ -182,6 +190,7 @@
       <p class="tagline">Single-file, offline-first tools you own.</p>
     </header>
 
+    <div class="group-label">tools</div>
     <section class="constellation">
 
       <a class="card" href="https://gentropic.org/works">
@@ -226,10 +235,15 @@
         <span class="tag live">file viewer</span>
       </a>
 
-      <a class="card" href="https://github.com/gentropic/playback">
-        <div class="name">playback</div>
-        <div class="what">“The Book That Plays Back” — a deterministic minimax gamebook. Free (CC0); print it yourself.</div>
-        <span class="tag">book · cc0</span>
+    </section>
+
+    <div class="group-label">stack</div>
+    <section class="constellation">
+
+      <a class="card" href="https://gentropic.org/accountable">
+        <div class="name">accountable</div>
+        <div class="what">A browser extension that brokers cross-origin fetches for GCU apps — consented, scoped, credential-less. You grant who reaches what.</div>
+        <span class="tag">browser extension</span>
       </a>
 
       <a class="card" href="https://github.com/gentropic/numen">
@@ -238,16 +252,21 @@
         <span class="tag">mcp bridge</span>
       </a>
 
-      <a class="card" href="https://gentropic.org/accountable">
-        <div class="name">accountable</div>
-        <div class="what">A browser extension that brokers cross-origin fetches for GCU apps — consented, scoped, credential-less. You grant who reaches what.</div>
-        <span class="tag">browser extension</span>
-      </a>
+    </section>
+
+    <div class="group-label">showcase</div>
+    <section class="constellation">
 
       <a class="card" href="https://gentropic.org/previous">
         <div class="name">previous</div>
         <div class="what">Where the GCU comes from — old geology-in-the-browser experiments, shown running. Desktop roots to a recovered geomodeller.</div>
         <span class="tag live">showcase</span>
+      </a>
+
+      <a class="card" href="https://github.com/gentropic/playback">
+        <div class="name">playback</div>
+        <div class="what">“The Book That Plays Back” — a deterministic minimax gamebook. Free (CC0); print it yourself.</div>
+        <span class="tag">book · cc0</span>
       </a>
 
     </section>
